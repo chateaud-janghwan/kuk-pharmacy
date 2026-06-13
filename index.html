@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>건국대학교병원 약제부</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar" aria-label="상단 메뉴">
+      <a class="brand" href="./index.html" aria-label="건국대학교병원 약제부 홈">
+        <span class="brand-mark">K</span>
+        <span>
+          <strong>건국대학교병원</strong>
+          <small>약제부</small>
+        </span>
+      </a>
+      <nav class="top-actions" aria-label="빠른 메뉴">
+        <button class="icon-button" id="searchToggle" type="button" aria-label="검색">
+          <span aria-hidden="true">⌕</span>
+        </button>
+        <button class="profile-button" type="button" aria-label="약제부">
+          <span aria-hidden="true">약</span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Konkuk University Medical Center</p>
+          <h1 id="page-title">약제부 업무 포털</h1>
+        </div>
+        <img
+          class="hero-image"
+          src="assets/pharmacy-hero.png"
+          alt=""
+          aria-hidden="true"
+        />
+      </section>
+
+      <section class="search-panel" id="searchPanel" aria-label="바로가기 검색" hidden>
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="portalSearch" type="search" placeholder="업무 또는 바로가기 검색" />
+        </label>
+      </section>
+
+      <section class="department-grid" id="departmentGrid" aria-live="polite"></section>
+    </main>
+
+    <footer class="credit">made by chateaud.</footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
