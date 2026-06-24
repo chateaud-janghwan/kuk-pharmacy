@@ -3,72 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="chateaud의 프로젝트와 작업을 소개하는 포트폴리오입니다."
-    />
-    <title>chateaud</title>
+    <title>건국대학교병원 약제부</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <nav class="nav-shell" aria-label="주요 메뉴">
-        <a class="wordmark" href="#top" aria-label="chateaud 홈">chateaud.</a>
-        <div class="nav-links">
-          <a href="#projects">프로젝트</a>
-          <a href="#about">소개</a>
-        </div>
-        <a class="nav-contact" href="mailto:hello@example.com">Contact</a>
+    <header class="topbar" aria-label="상단 메뉴">
+      <a class="brand" href="./index.html" aria-label="건국대학교병원 약제부 홈">
+        <span class="brand-mark">K</span>
+        <span>
+          <strong>건국대학교병원</strong>
+          <small>약제부</small>
+        </span>
+      </a>
+      <nav class="top-actions" aria-label="빠른 메뉴">
+        <button class="icon-button" id="searchToggle" type="button" aria-label="검색">
+          <span aria-hidden="true">⌕</span>
+        </button>
+        <button class="profile-button" type="button" aria-label="약제부">
+          <span aria-hidden="true">약</span>
+        </button>
       </nav>
     </header>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <p class="hero-eyebrow reveal">Portfolio · 2026</p>
-        <h1 id="hero-title" class="reveal">
-          생각을 도구로,<br />
-          <span>복잡함을 단순하게.</span>
-        </h1>
-        <p class="hero-description reveal">
-          일상의 불편을 발견하고, 오래 쓰고 싶은 디지털 경험으로 만듭니다.
-        </p>
-        <a class="hero-link reveal" href="#projects">
-          프로젝트 둘러보기 <span aria-hidden="true">↓</span>
-        </a>
-        <div class="hero-orb orb-one" aria-hidden="true"></div>
-        <div class="hero-orb orb-two" aria-hidden="true"></div>
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Konkuk University Medical Center</p>
+          <h1 id="page-title">약제부 업무 포털</h1>
+        </div>
+        <img
+          class="hero-image"
+          src="assets/pharmacy-hero.png"
+          alt=""
+          aria-hidden="true"
+        />
       </section>
 
-      <section class="project-section" id="projects" aria-labelledby="projects-title">
-        <div class="section-heading">
-          <p>Selected work</p>
-          <h2 id="projects-title">만든 것들.</h2>
-        </div>
-        <div class="project-list" id="projectList"></div>
+      <section class="search-panel" id="searchPanel" aria-label="바로가기 검색" hidden>
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="portalSearch" type="search" placeholder="업무 또는 바로가기 검색" />
+        </label>
       </section>
 
-      <section class="about-section" id="about" aria-labelledby="about-title">
-        <div>
-          <p class="about-label">About</p>
-          <h2 id="about-title">필요한 것을 직접 만듭니다.</h2>
-        </div>
-        <p class="about-copy">
-          작은 계산기부터 복잡한 업무 시스템까지, 실제로 사용하는 사람의 흐름을
-          먼저 생각합니다. 분명한 구조와 편안한 인터페이스를 좋아합니다.
-        </p>
-      </section>
+      <section class="department-grid" id="departmentGrid" aria-live="polite"></section>
     </main>
 
-    <footer>
-      <span>© 2026 chateaud</span>
-      <a href="#top">맨 위로 ↑</a>
-    </footer>
+    <footer class="credit">chateaud.</footer>
 
     <script src="script.js"></script>
   </body>
