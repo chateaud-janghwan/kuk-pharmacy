@@ -8,7 +8,7 @@ const departments = [
     links: [
       { label: "향정계산기", href: "https://hyangjeong-counter.pages.dev/" },
       {
-        label: "마약류 폐기량 계산",
+        label: "폐기량 계산",
         href: "https://drug-disposal-calculator.hidoi.workers.dev/",
       },
       { label: "-", href: "#" },
