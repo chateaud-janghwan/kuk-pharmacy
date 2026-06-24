@@ -16,6 +16,9 @@ const departments = [
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
     ],
   },
   {
@@ -25,6 +28,9 @@ const departments = [
     accentBg: "#e5fbf5",
     icon: "outpatient",
     links: [
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
@@ -48,6 +54,9 @@ const departments = [
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
     ],
   },
   {
@@ -57,6 +66,9 @@ const departments = [
     accentBg: "#f1edff",
     icon: "clinical",
     links: [
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
+      { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
