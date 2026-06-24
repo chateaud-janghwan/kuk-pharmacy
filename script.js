@@ -1,175 +1,123 @@
-const departments = [
+// 바로가기 수정 방법:
+// links 배열에 { label: "버튼 이름", href: "https://주소" }를 넣으면 됩니다.
+const projects = [
   {
-    title: "병동약국",
-    kicker: "Ward Pharmacy",
-    accent: "#3182f6",
-    accentBg: "#e8f3ff",
-    icon: "ward",
+    title: "Pharmacy Tools",
+    description: "반복되는 약제 업무를 더 빠르고 정확하게 처리하기 위한 실무 도구 모음.",
+    background: "#e9f2ff",
+    text: "#17294a",
+    image: "assets/pharmacy-hero.png",
     links: [
       { label: "향정계산기", href: "https://hyangjeong-counter.pages.dev/" },
       {
         label: "폐기량 계산",
         href: "https://drug-disposal-calculator.hidoi.workers.dev/",
       },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
     ],
   },
   {
-    title: "외래약국",
-    kicker: "Outpatient Pharmacy",
-    accent: "#00b894",
-    accentBg: "#e5fbf5",
-    icon: "outpatient",
-    links: [
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-    ],
+    title: "F1 Show",
+    description: "최신 Formula 1 뉴스를 한곳에 모아 빠르게 확인할 수 있는 뉴스 큐레이션 사이트.",
+    background: "#f0f0f3",
+    text: "#1d1d1f",
+    image: "assets/f1-show-illustration.png",
+    links: [{ label: "F1 뉴스 보기", href: "https://f1show.pages.dev" }],
   },
   {
-    title: "약무정보실",
-    kicker: "Drug Information",
-    accent: "#ff6f61",
-    accentBg: "#fff0ee",
-    icon: "info",
+    title: "주식 용어사전",
+    description: "처음 주식을 시작하는 사람도 어려운 투자 용어를 쉽고 빠르게 이해할 수 있는 입문자용 사전.",
+    background: "#edf7f1",
+    text: "#173b2a",
+    image: "assets/stock-chart-illustration.png",
     links: [
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-    ],
-  },
-  {
-    title: "임상지원실",
-    kicker: "Clinical Support",
-    accent: "#8b5cf6",
-    accentBg: "#f1edff",
-    icon: "clinical",
-    links: [
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
+      {
+        label: "용어사전 보기",
+        href: "https://c02e0919.stock-beginner-glossary.pages.dev",
+      },
     ],
   },
 ];
 
-const iconPaths = {
-  ward: `
-    <path d="M5 11h14" />
-    <path d="M12 4v14" />
-    <path d="M6 7h12a2 2 0 0 1 2 2v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V9a2 2 0 0 1 2-2Z" />
-  `,
-  outpatient: `
-    <path d="M8 11h8" />
-    <path d="M12 7v8" />
-    <path d="M7 3h10l3 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8l3-5Z" />
-  `,
-  info: `
-    <circle cx="12" cy="12" r="9" />
-    <path d="M12 10v6" />
-    <path d="M12 7h.01" />
-  `,
-  clinical: `
-    <path d="M10 3v6l-5 8a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-8V3" />
-    <path d="M8 3h8" />
-    <path d="M8 15h8" />
-  `,
-};
+function createShortcut(link) {
+  const isReady = Boolean(link.href);
+  const element = document.createElement(isReady ? "a" : "span");
+  element.className = `shortcut-button${isReady ? "" : " disabled"}`;
+  element.textContent = link.label;
 
-function createDepartmentCard(department) {
-  const article = document.createElement("article");
-  article.className = "department-card";
-  article.style.setProperty("--accent", department.accent);
-  article.style.setProperty("--accent-bg", department.accentBg);
+  if (isReady) {
+    element.href = link.href;
+    element.target = "_blank";
+    element.rel = "noopener noreferrer";
+    element.insertAdjacentHTML("beforeend", '<span aria-hidden="true">↗</span>');
+  }
 
-  const links = department.links
-    .map(
-      (link) => `
-        <a class="portal-link" href="${link.href}">
-          <span>${link.label}</span>
-          <span aria-hidden="true">›</span>
-        </a>
-      `
-    )
-    .join("");
+  return element;
+}
 
-  article.innerHTML = `
-    <div class="card-top">
-      <div>
-        <p class="card-kicker">${department.kicker}</p>
-        <h3>${department.title}</h3>
-      </div>
-      <div class="card-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">${iconPaths[department.icon]}</svg>
-      </div>
-    </div>
-    <div class="link-list">${links}</div>
+function createProjectCard(project, index) {
+  const card = document.createElement("article");
+  card.className = "project-card";
+  card.dataset.dark = String(Boolean(project.dark));
+  card.style.setProperty("--card-bg", project.background);
+  card.style.setProperty("--card-text", project.text);
+
+  const copy = document.createElement("div");
+  copy.className = "project-copy";
+  copy.innerHTML = `
+    <p class="project-number">${String(index + 1).padStart(2, "0")}</p>
+    <h3>${project.title}</h3>
+    <p class="project-description">${project.description}</p>
   `;
 
-  return article;
-}
+  const shortcuts = document.createElement("div");
+  shortcuts.className = "shortcut-list";
+  project.links.forEach((link) => shortcuts.appendChild(createShortcut(link)));
+  copy.appendChild(shortcuts);
 
-const grid = document.querySelector("#departmentGrid");
-departments.forEach((department) => grid.appendChild(createDepartmentCard(department)));
+  const visual = document.createElement("div");
+  visual.className = "project-visual";
 
-const searchToggle = document.querySelector("#searchToggle");
-const searchPanel = document.querySelector("#searchPanel");
-const portalSearch = document.querySelector("#portalSearch");
-
-searchToggle.addEventListener("click", () => {
-  searchPanel.hidden = !searchPanel.hidden;
-  if (!searchPanel.hidden) {
-    portalSearch.focus();
+  if (project.image) {
+    visual.innerHTML = `
+      <div class="device-frame">
+        <img src="${project.image}" alt="${project.title} 프로젝트 미리보기" />
+      </div>
+    `;
   } else {
-    portalSearch.value = "";
-    filterDepartments("");
+    visual.innerHTML = '<div class="abstract-visual" aria-hidden="true"></div>';
+    const shape = visual.querySelector(".abstract-visual");
+    shape.style.setProperty("--visual-a", project.colors[0]);
+    shape.style.setProperty("--visual-b", project.colors[1]);
   }
-});
 
-portalSearch.addEventListener("input", (event) => {
-  filterDepartments(event.target.value);
-});
-
-function filterDepartments(query) {
-  const normalizedQuery = query.trim().toLocaleLowerCase("ko-KR");
-
-  document.querySelectorAll(".department-card").forEach((card, index) => {
-    const department = departments[index];
-    const searchableText = [
-      department.title,
-      department.kicker,
-      ...department.links.map((link) => link.label),
-    ]
-      .join(" ")
-      .toLocaleLowerCase("ko-KR");
-
-    card.hidden = normalizedQuery !== "" && !searchableText.includes(normalizedQuery);
-  });
+  card.append(copy, visual);
+  return card;
 }
+
+const projectList = document.querySelector("#projectList");
+projects.forEach((project, index) => {
+  projectList.appendChild(createProjectCard(project, index));
+});
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.animate(
+        [
+          { opacity: 0, transform: "translateY(36px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
+        {
+          duration: 700,
+          easing: "cubic-bezier(.2,.8,.2,1)",
+          fill: "both",
+        }
+      );
+      observer.unobserve(entry.target);
+    });
+  },
+  { threshold: 0.12 }
+);
+
+document.querySelectorAll(".project-card").forEach((card) => observer.observe(card));
