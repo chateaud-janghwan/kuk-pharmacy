@@ -7,7 +7,10 @@ const departments = [
     icon: "ward",
     links: [
       { label: "향정계산기", href: "https://hyangjeong-counter.pages.dev/" },
-      { label: "-", href: "#" },
+      {
+        label: "마약류 폐기량 계산",
+        href: "https://drug-disposal-calculator.hidoi.workers.dev/",
+      },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
