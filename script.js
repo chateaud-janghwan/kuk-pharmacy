@@ -1,7 +1,7 @@
 const departments = [
   {
     title: "병동약국",
-    kicker: "Ward Pharmacy",
+    kicker: "Inpatient Pharmacy",
     accent: "#3182f6",
     accentBg: "#e8f3ff",
     icon: "ward",
