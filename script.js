@@ -11,7 +11,7 @@ const departments = [
         label: "폐기량 계산",
         href: "https://drug-disposal-calculator.hidoi.workers.dev/",
       },
-      { label: "-", href: "#" },
+      { label: "산제리스트", href: "https://powderlist.pages.dev" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
