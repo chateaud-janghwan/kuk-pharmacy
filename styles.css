@@ -389,6 +389,18 @@ h1 {
   text-align: right;
 }
 
+.visit-counter {
+  margin-left: 6px;
+  color: #b0b8c1;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.visit-counter b {
+  font-weight: 700;
+}
+
 .department-card[hidden] {
   display: none;
 }
