@@ -12,7 +12,7 @@ const departments = [
         href: "https://drug-disposal-calculator.hidoi.workers.dev/",
       },
       { label: "산제리스트", href: "https://powderlist.pages.dev" },
-      { label: "-", href: "#" },
+      { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
       { label: "-", href: "#" },
