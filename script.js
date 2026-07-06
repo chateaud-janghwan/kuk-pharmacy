@@ -1,83 +1,45 @@
+const SLOT_COUNT = 10;
+
 const departments = [
   {
     title: "병동약국",
     kicker: "Inpatient Pharmacy",
-    accent: "#3182f6",
-    accentBg: "#e8f3ff",
+    accent: "#3b82f6",
     icon: "ward",
     links: [
       { label: "향정계산기", href: "https://hyangjeong-counter.pages.dev/" },
       {
-        label: "폐기량 계산",
+        label: "마약향정폐기량",
         href: "https://drug-disposal-calculator.hidoi.workers.dev/",
       },
       { label: "산제리스트", href: "https://powderlist.pages.dev" },
       { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-    ],
-  },
-  {
-    title: "외래약국",
-    kicker: "Outpatient Pharmacy",
-    accent: "#00b894",
-    accentBg: "#e5fbf5",
-    icon: "outpatient",
-    links: [
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
     ],
   },
   {
     title: "약무정보실",
     kicker: "Drug Information",
-    accent: "#ff6f61",
-    accentBg: "#fff0ee",
+    accent: "#e85d4f",
     icon: "info",
     links: [
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
+      { label: "신약변경알림", href: "https://pharmacy-notification.pages.dev/" },
     ],
   },
-  {
-    title: "임상지원실",
-    kicker: "Clinical Support",
-    accent: "#8b5cf6",
-    accentBg: "#f1edff",
-    icon: "clinical",
-    links: [
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-      { label: "-", href: "#" },
-    ],
-  },
+  // 추후 추가 시 아래 주석 해제
+  // {
+  //   title: "외래약국",
+  //   kicker: "Outpatient Pharmacy",
+  //   accent: "#0ea474",
+  //   icon: "outpatient",
+  //   links: [],
+  // },
+  // {
+  //   title: "임상지원실",
+  //   kicker: "Clinical Support",
+  //   accent: "#8b5cf6",
+  //   icon: "clinical",
+  //   links: [],
+  // },
 ];
 
 const iconPaths = {
@@ -107,18 +69,21 @@ function createDepartmentCard(department) {
   const article = document.createElement("article");
   article.className = "department-card";
   article.style.setProperty("--accent", department.accent);
-  article.style.setProperty("--accent-bg", department.accentBg);
 
-  const links = department.links
+  const realLinks = department.links
     .map(
       (link) => `
-        <a class="portal-link" href="${link.href}">
+        <a class="portal-link" href="${link.href}" target="_blank" rel="noopener">
           <span>${link.label}</span>
-          <span aria-hidden="true">›</span>
         </a>
       `
     )
     .join("");
+
+  const emptySlots = Array.from(
+    { length: Math.max(0, SLOT_COUNT - department.links.length) },
+    () => `<span class="portal-link is-empty" aria-hidden="true">미지정</span>`
+  ).join("");
 
   article.innerHTML = `
     <div class="card-top">
@@ -130,7 +95,7 @@ function createDepartmentCard(department) {
         <svg viewBox="0 0 24 24">${iconPaths[department.icon]}</svg>
       </div>
     </div>
-    <div class="link-list">${links}</div>
+    <div class="link-list">${realLinks}${emptySlots}</div>
   `;
 
   return article;
@@ -139,26 +104,29 @@ function createDepartmentCard(department) {
 const grid = document.querySelector("#departmentGrid");
 departments.forEach((department) => grid.appendChild(createDepartmentCard(department)));
 
-const searchToggle = document.querySelector("#searchToggle");
-const searchPanel = document.querySelector("#searchPanel");
+// ===== 검색 =====
 const portalSearch = document.querySelector("#portalSearch");
-
-searchToggle.addEventListener("click", () => {
-  searchPanel.hidden = !searchPanel.hidden;
-  if (!searchPanel.hidden) {
-    portalSearch.focus();
-  } else {
-    portalSearch.value = "";
-    filterDepartments("");
-  }
-});
+const emptyState = document.querySelector("#emptyState");
 
 portalSearch.addEventListener("input", (event) => {
   filterDepartments(event.target.value);
 });
 
+document.addEventListener("keydown", (event) => {
+  const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName || "");
+  if (event.key === "/" && !typing) {
+    event.preventDefault();
+    portalSearch.focus();
+  } else if (event.key === "Escape" && document.activeElement === portalSearch) {
+    portalSearch.value = "";
+    filterDepartments("");
+    portalSearch.blur();
+  }
+});
+
 function filterDepartments(query) {
   const normalizedQuery = query.trim().toLocaleLowerCase("ko-KR");
+  let visibleCount = 0;
 
   document.querySelectorAll(".department-card").forEach((card, index) => {
     const department = departments[index];
@@ -170,9 +138,45 @@ function filterDepartments(query) {
       .join(" ")
       .toLocaleLowerCase("ko-KR");
 
-    card.hidden = normalizedQuery !== "" && !searchableText.includes(normalizedQuery);
+    const matched = normalizedQuery === "" || searchableText.includes(normalizedQuery);
+    card.hidden = !matched;
+    if (matched) visibleCount += 1;
+
+    card.querySelectorAll("a.portal-link").forEach((link, linkIndex) => {
+      const label = department.links[linkIndex].label.toLocaleLowerCase("ko-KR");
+      link.classList.toggle(
+        "is-hit",
+        normalizedQuery !== "" && label.includes(normalizedQuery)
+      );
+    });
   });
+
+  emptyState.hidden = visibleCount > 0;
 }
+
+// ===== 시계 · 날짜 =====
+const clock = document.querySelector("#clock");
+const heroDate = document.querySelector("#heroDate");
+const timeFormat = new Intl.DateTimeFormat("ko-KR", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+const dateFormat = new Intl.DateTimeFormat("ko-KR", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  weekday: "long",
+});
+
+function updateClock() {
+  const now = new Date();
+  clock.textContent = timeFormat.format(now);
+  heroDate.textContent = dateFormat.format(now);
+}
+
+updateClock();
+setInterval(updateClock, 15000);
 
 // ===== 방문자 카운터 (Cloudflare KV) =====
 (function visitorCounter() {
