@@ -14,6 +14,7 @@ const departments = [
       },
       { label: "산제리스트", href: "https://powderlist.pages.dev" },
       { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
+      { label: "점심메뉴", href: "https://lunch-menu-5ok.pages.dev/" },
     ],
   },
   {
