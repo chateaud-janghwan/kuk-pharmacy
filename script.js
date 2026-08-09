@@ -26,7 +26,7 @@ const departments = [
     links: [
       { label: "신약변경알림", href: "https://pharmacy-notification.pages.dev/" },
       { label: "코드유효성확인", href: "https://drug-code-validator.pages.dev" },
-      { label: "코드월통계", href: "https://drugcode-stats.pages.dev/" },
+      { label: "약품코드통계", href: "https://drugcode-stats.pages.dev/" },
     ],
   },
   // 추후 추가 시 아래 주석 해제
