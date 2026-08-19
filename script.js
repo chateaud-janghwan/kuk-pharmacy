@@ -30,14 +30,16 @@ const departments = [
       { label: "약품코드통계", href: "https://drugcode-stats.pages.dev/" },
     ],
   },
+  {
+    title: "외래약국",
+    kicker: "Outpatient Pharmacy",
+    accent: "#0ea474",
+    icon: "outpatient",
+    links: [
+      { label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/" },
+    ],
+  },
   // 추후 추가 시 아래 주석 해제
-  // {
-  //   title: "외래약국",
-  //   kicker: "Outpatient Pharmacy",
-  //   accent: "#0ea474",
-  //   icon: "outpatient",
-  //   links: [],
-  // },
   // {
   //   title: "임상지원실",
   //   kicker: "Clinical Support",
