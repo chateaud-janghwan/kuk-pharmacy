@@ -17,6 +17,7 @@ const departments = [
       { label: "점심메뉴", href: "https://lunch-menu-5ok.pages.dev/" },
       { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev" },
       { label: "매뉴얼챗봇", href: "https://pharm-manual.pages.dev" },
+      { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
     ],
   },
   {
