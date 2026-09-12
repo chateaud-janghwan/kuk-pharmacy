@@ -40,14 +40,15 @@ const departments = [
       { label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/" },
     ],
   },
-  // 추후 추가 시 아래 주석 해제
-  // {
-  //   title: "임상지원실",
-  //   kicker: "Clinical Support",
-  //   accent: "#8b5cf6",
-  //   icon: "clinical",
-  //   links: [],
-  // },
+  {
+    title: "임상지원실",
+    kicker: "Clinical Support",
+    accent: "#8b5cf6",
+    icon: "clinical",
+    links: [
+      { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
+    ],
+  },
 ];
 
 const iconPaths = {
