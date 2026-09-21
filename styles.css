@@ -281,6 +281,10 @@ main {
   flex: 1;
 }
 
+.department-card:not(.department-card--merged) .link-list {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .portal-link.is-hit {
   background: var(--kp-blue-weak);
   color: var(--kp-blue-strong);
@@ -349,6 +353,15 @@ main {
   font-size: 10px;
 }
 
+.department-card--merged .link-list {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.department-card--merged .portal-link {
+  padding: 0 8px;
+  font-size: 12px;
+}
+
 .empty-state {
   margin: 28px 0;
   color: var(--kp-muted);
@@ -406,5 +419,13 @@ main {
     width: auto;
     height: 1px;
     margin: 0 20px;
+  }
+
+  .department-card:not(.department-card--merged) .link-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .department-card--merged .portal-link {
+    font-size: 13px;
   }
 }
