@@ -1,5 +1,5 @@
-const SLOT_COUNT = 10;
-
+// 병동약국은 단독 카드로, 나머지 세 부서는 카드 하나를 절반씩 나눠 담는다
+// (좌: 약무정보실 / 우: 외래약국·임상지원실 상하 분할).
 const departments = [
   {
     title: "병동약국",
@@ -19,6 +19,9 @@ const departments = [
       { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
     ],
   },
+];
+
+const mergedDepartments = [
   {
     title: "약무정보실",
     kicker: "Drug Information",
@@ -35,18 +38,14 @@ const departments = [
     kicker: "Outpatient Pharmacy",
     accent: "#0ea474",
     icon: "outpatient",
-    links: [
-      { label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/" },
-    ],
+    links: [{ label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/" }],
   },
   {
     title: "임상지원실",
     kicker: "Clinical Support",
     accent: "#8b5cf6",
     icon: "clinical",
-    links: [
-      { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
-    ],
+    links: [{ label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" }],
   },
 ];
 
@@ -73,25 +72,23 @@ const iconPaths = {
   `,
 };
 
-function createDepartmentCard(department) {
-  const article = document.createElement("article");
-  article.className = "department-card";
-  article.style.setProperty("--accent", department.accent);
-
-  const realLinks = department.links
+function linksMarkup(links) {
+  return links
     .map(
       (link) => `
-        <a class="portal-link" href="${link.href}" target="_blank" rel="noopener">
+        <a class="portal-link kp-chip" href="${link.href}" target="_blank" rel="noopener">
           <span>${link.label}</span>
         </a>
       `
     )
     .join("");
+}
 
-  const emptySlots = Array.from(
-    { length: Math.max(0, SLOT_COUNT - department.links.length) },
-    () => `<span class="portal-link is-empty" aria-hidden="true">미지정</span>`
-  ).join("");
+function createDepartmentCard(department) {
+  const article = document.createElement("article");
+  article.className = "department-card kp-card kp-card--interactive";
+  article.dataset.departments = department.title;
+  article.style.setProperty("--accent", department.accent);
 
   article.innerHTML = `
     <div class="card-top">
@@ -99,11 +96,58 @@ function createDepartmentCard(department) {
         <p class="card-kicker">${department.kicker}</p>
         <h3>${department.title}</h3>
       </div>
-      <div class="card-icon" aria-hidden="true">
+      <div class="card-icon kp-icon-badge" aria-hidden="true">
         <svg viewBox="0 0 24 24">${iconPaths[department.icon]}</svg>
       </div>
     </div>
-    <div class="link-list">${realLinks}${emptySlots}</div>
+    <div class="link-list">${linksMarkup(department.links)}</div>
+  `;
+
+  return article;
+}
+
+function miniBlock(department) {
+  return `
+    <div class="stack-block" style="--accent:${department.accent}">
+      <div class="card-top card-top--compact">
+        <div>
+          <p class="card-kicker">${department.kicker}</p>
+          <h3>${department.title}</h3>
+        </div>
+        <div class="card-icon card-icon--sm kp-icon-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24">${iconPaths[department.icon]}</svg>
+        </div>
+      </div>
+      <div class="link-list">${linksMarkup(department.links)}</div>
+    </div>
+  `;
+}
+
+// 왼쪽 절반 = deptLeft 전체, 오른쪽 절반 = deptTop / deptBottom 을 상하로 분할.
+function createMergedCard(deptLeft, deptTop, deptBottom) {
+  const article = document.createElement("article");
+  article.className = "department-card department-card--merged kp-card kp-card--interactive";
+  article.dataset.departments = `${deptLeft.title} ${deptTop.title} ${deptBottom.title}`;
+
+  article.innerHTML = `
+    <div class="merged-half" style="--accent:${deptLeft.accent}">
+      <div class="card-top">
+        <div>
+          <p class="card-kicker">${deptLeft.kicker}</p>
+          <h3>${deptLeft.title}</h3>
+        </div>
+        <div class="card-icon kp-icon-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24">${iconPaths[deptLeft.icon]}</svg>
+        </div>
+      </div>
+      <div class="link-list">${linksMarkup(deptLeft.links)}</div>
+    </div>
+    <div class="merged-divider" aria-hidden="true"></div>
+    <div class="merged-half merged-half--stack">
+      ${miniBlock(deptTop)}
+      <div class="stack-divider" aria-hidden="true"></div>
+      ${miniBlock(deptBottom)}
+    </div>
   `;
 
   return article;
@@ -111,6 +155,9 @@ function createDepartmentCard(department) {
 
 const grid = document.querySelector("#departmentGrid");
 departments.forEach((department) => grid.appendChild(createDepartmentCard(department)));
+grid.appendChild(createMergedCard(mergedDepartments[0], mergedDepartments[1], mergedDepartments[2]));
+
+const allDepartments = [...departments, ...mergedDepartments];
 
 // ===== 검색 =====
 const portalSearch = document.querySelector("#portalSearch");
@@ -136,13 +183,13 @@ function filterDepartments(query) {
   const normalizedQuery = query.trim().toLocaleLowerCase("ko-KR");
   let visibleCount = 0;
 
-  document.querySelectorAll(".department-card").forEach((card, index) => {
-    const department = departments[index];
-    const searchableText = [
-      department.title,
-      department.kicker,
-      ...department.links.map((link) => link.label),
-    ]
+  document.querySelectorAll(".department-card").forEach((card) => {
+    const cardDepartments = allDepartments.filter((department) =>
+      card.dataset.departments.split(" ").includes(department.title)
+    );
+
+    const searchableText = cardDepartments
+      .flatMap((department) => [department.title, department.kicker, ...department.links.map((l) => l.label)])
       .join(" ")
       .toLocaleLowerCase("ko-KR");
 
@@ -150,19 +197,16 @@ function filterDepartments(query) {
     card.hidden = !matched;
     if (matched) visibleCount += 1;
 
-    card.querySelectorAll("a.portal-link").forEach((link, linkIndex) => {
-      const label = department.links[linkIndex].label.toLocaleLowerCase("ko-KR");
-      link.classList.toggle(
-        "is-hit",
-        normalizedQuery !== "" && label.includes(normalizedQuery)
-      );
+    card.querySelectorAll("a.portal-link").forEach((link) => {
+      const label = link.textContent.trim().toLocaleLowerCase("ko-KR");
+      link.classList.toggle("is-hit", normalizedQuery !== "" && label.includes(normalizedQuery));
     });
   });
 
   emptyState.hidden = visibleCount > 0;
 }
 
-// ===== 시계 · 날짜 =====
+// ===== 시계 · 날짜 · 인사말 =====
 const clock = document.querySelector("#clock");
 const heroDate = document.querySelector("#heroDate");
 const timeFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -186,22 +230,35 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 15000);
 
-// ===== 방문자 카운터 (Cloudflare KV) =====
-(function visitorCounter() {
-  const box = document.querySelector("#visitCounter");
-  const out = document.querySelector("#visitCount");
-  if (!box || !out) return;
+// ===== 히어로 통계 (부서 수 · 바로가기 수 · 방문자 수) =====
+(function renderHeroStats() {
+  const box = document.querySelector("#heroStats");
+  if (!box) return;
 
-  // 같은 세션에서 새로고침해도 1회만 증가
+  const departmentCount = departments.length + mergedDepartments.length;
+  const linkCount = allDepartments.reduce((sum, d) => sum + d.links.length, 0);
+
+  box.innerHTML = `
+    <span class="hero-stat"><b>${departmentCount}</b>개 부서</span>
+    <span class="hero-stat-divider" aria-hidden="true"></span>
+    <span class="hero-stat"><b>${linkCount}</b>개 바로가기</span>
+  `;
+
+  // 방문자 수 (Cloudflare KV). 바인딩이 없는 로컬 미리보기에서는 조용히 생략된다.
   const counted = sessionStorage.getItem("kp_visit_counted");
   const method = counted ? "GET" : "POST";
 
   fetch("/api/hits", { method })
     .then((res) => res.json())
     .then((data) => {
-      if (!data || typeof data.count !== "number") return; // 바인딩 없으면 숨김 유지
-      out.textContent = data.count.toLocaleString("ko-KR");
-      box.hidden = false;
+      if (!data || typeof data.count !== "number") return;
+      const divider = document.createElement("span");
+      divider.className = "hero-stat-divider";
+      divider.setAttribute("aria-hidden", "true");
+      const stat = document.createElement("span");
+      stat.className = "hero-stat";
+      stat.innerHTML = `<b>${data.count.toLocaleString("ko-KR")}</b>번째 방문`;
+      box.append(divider, stat);
       sessionStorage.setItem("kp_visit_counted", "1");
     })
     .catch(() => {});

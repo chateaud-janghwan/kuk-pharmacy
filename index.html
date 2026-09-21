@@ -13,10 +13,12 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
+    <link rel="stylesheet" href="design-kit/tokens.css" />
+    <link rel="stylesheet" href="design-kit/components.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="topbar" aria-label="상단 메뉴">
+    <header class="kp-topbar" aria-label="상단 메뉴">
       <a class="brand" href="./index.html" aria-label="건국대학교병원 약제부 홈">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" /></svg>
@@ -34,14 +36,26 @@
 
     <main>
       <section class="hero" aria-labelledby="page-title">
-        <div class="hero-copy">
-          <p class="eyebrow">Konkuk University Medical Center</p>
-          <h1 id="page-title">약제부 업무 포털</h1>
+        <div class="hero-main">
+          <p class="kp-eyebrow">Konkuk University Medical Center</p>
+          <h1 id="page-title" class="kp-h1">약제부 업무 포털</h1>
           <p class="hero-date" id="heroDate"></p>
+          <div class="hero-stats" id="heroStats" aria-hidden="true"></div>
+        </div>
+        <div class="hero-mark" aria-hidden="true">
+          <span class="hero-mark-shape hero-mark-shape--a">
+            <svg viewBox="0 0 24 24"><path d="M10 3v6l-5 8a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-8V3" /><path d="M8 3h8" /></svg>
+          </span>
+          <span class="hero-mark-shape hero-mark-shape--b">
+            <svg viewBox="0 0 24 24"><path d="M5 11h14" /><path d="M12 4v14" /></svg>
+          </span>
+          <span class="hero-mark-shape hero-mark-shape--c">
+            <svg viewBox="0 0 24 24"><path d="M4 19h16" /><path d="M7 19v-6" /><path d="M12 19V6" /><path d="M17 19v-9" /></svg>
+          </span>
         </div>
       </section>
 
-      <label class="search-box" aria-label="바로가기 검색">
+      <label class="search-box kp-input" aria-label="바로가기 검색">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.8-3.8" />
@@ -54,10 +68,7 @@
       <p class="empty-state" id="emptyState" hidden>검색 결과가 없습니다.</p>
     </main>
 
-    <footer class="credit">
-      chateaud.
-      <span class="visit-counter" id="visitCounter" hidden>· 방문 <b id="visitCount">0</b></span>
-    </footer>
+    <footer class="credit">chateaud.</footer>
 
     <script src="script.js"></script>
   </body>

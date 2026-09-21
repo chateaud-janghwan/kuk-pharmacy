@@ -1,0 +1,215 @@
+/*
+  건국대병원 약제부 포털 — 공용 컴포넌트
+  tokens.css 다음에 이 파일을 불러와서 씁니다.
+  플랫 · 무보더 · 옅은 그림자 · 큰 라운드 · 굵은 헤드라인 (토스 스타일).
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  background: var(--kp-bg);
+  color: var(--kp-text);
+  font-family: var(--kp-font);
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+/* ===== 타이포 스케일 ===== */
+.kp-eyebrow {
+  margin: 0 0 8px;
+  color: var(--kp-blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.kp-h1 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.kp-sub {
+  margin: 0;
+  color: var(--kp-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===== 카드 : 무보더, 화이트 면, 옅은 그림자 ===== */
+.kp-card {
+  border: none;
+  border-radius: var(--kp-r-lg);
+  background: var(--kp-surface);
+  box-shadow: var(--kp-shadow);
+}
+
+.kp-card--interactive {
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.kp-card--interactive:hover {
+  box-shadow: var(--kp-shadow-lift);
+}
+
+/* ===== 아이콘 배지 ===== */
+.kp-icon-badge {
+  display: grid;
+  place-items: center;
+  border-radius: var(--kp-r-sm);
+  background: var(--kp-badge-bg, var(--kp-blue-weak));
+  color: var(--kp-badge-fg, var(--kp-blue));
+}
+
+.kp-icon-badge svg {
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===== 칩 (바로가기 링크 등) ===== */
+.kp-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--kp-r-sm);
+  background: var(--kp-surface-2);
+  color: var(--kp-text);
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.kp-chip:hover,
+.kp-chip:focus-visible {
+  background: var(--kp-blue-weak);
+  color: var(--kp-blue-strong);
+  outline: none;
+}
+
+.kp-chip--active {
+  background: var(--kp-blue-weak);
+  color: var(--kp-blue-strong);
+}
+
+/* ===== 버튼 ===== */
+.kp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--kp-r-md);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, opacity 140ms ease;
+}
+
+.kp-btn--primary {
+  background: var(--kp-blue);
+  color: #ffffff;
+}
+
+.kp-btn--primary:hover {
+  background: var(--kp-blue-strong);
+}
+
+.kp-btn--secondary {
+  background: var(--kp-surface-2);
+  color: var(--kp-text);
+}
+
+.kp-btn--secondary:hover {
+  background: var(--kp-blue-weak);
+  color: var(--kp-blue-strong);
+}
+
+/* ===== 인풋 / 검색창 ===== */
+.kp-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--kp-r-md);
+  background: var(--kp-surface);
+  box-shadow: var(--kp-shadow);
+}
+
+.kp-input input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--kp-text);
+  font-family: var(--kp-font);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.kp-input input::placeholder {
+  color: var(--kp-faint);
+}
+
+.kp-input svg {
+  flex: 0 0 auto;
+  width: 19px;
+  height: 19px;
+  stroke: var(--kp-faint);
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
+}
+
+/* ===== 상단 바 ===== */
+.kp-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 clamp(20px, 5vw, 56px);
+  background: color-mix(in srgb, var(--kp-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ===== 유틸 ===== */
+.kp-container {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+}

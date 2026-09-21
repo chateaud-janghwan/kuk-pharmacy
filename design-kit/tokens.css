@@ -1,0 +1,67 @@
+/*
+  건국대병원 약제부 포털 — 공용 디자인 토큰
+  토스증권류의 플랫, 화이트/그레이 베이스, 블루 액센트 스타일.
+  다른 바로가기 프로젝트에도 이 파일 + components.css를 그대로 복사해서 쓰면
+  전체 사이트가 동일한 톤앤매너를 갖게 됩니다.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  /* --- 색 --- */
+  --kp-bg: #f2f4f6;
+  --kp-surface: #ffffff;
+  --kp-surface-2: #f7f8fa;
+  --kp-text: #191f28;
+  --kp-muted: #4e5968;
+  --kp-faint: #8b95a1;
+  --kp-line: #e5e8eb;
+
+  --kp-blue: #3182f6;
+  --kp-blue-weak: #eaf2ff;
+  --kp-blue-strong: #1b64da;
+
+  --kp-red: #f04452;
+  --kp-green: #17c1a3;
+
+  /* --- 반경 --- */
+  --kp-r-sm: 10px;
+  --kp-r-md: 16px;
+  --kp-r-lg: 20px;
+  --kp-r-pill: 999px;
+
+  /* --- 그림자 (아주 옅게만) --- */
+  --kp-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --kp-shadow-lift: 0 4px 14px rgba(15, 23, 42, 0.08);
+
+  /* --- 타이포 --- */
+  --kp-font: "Pretendard Variable", Pretendard, "Noto Sans KR", system-ui,
+    -apple-system, "Apple SD Gothic Neo", sans-serif;
+
+  /* --- 간격 --- */
+  --kp-space-1: 4px;
+  --kp-space-2: 8px;
+  --kp-space-3: 12px;
+  --kp-space-4: 16px;
+  --kp-space-5: 24px;
+  --kp-space-6: 32px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --kp-bg: #17191c;
+    --kp-surface: #212327;
+    --kp-surface-2: #26282c;
+    --kp-text: #f2f3f5;
+    --kp-muted: #b0b8c1;
+    --kp-faint: #6b7280;
+    --kp-line: #2f3237;
+
+    --kp-blue: #4c8dff;
+    --kp-blue-weak: #1c2a3f;
+    --kp-blue-strong: #78aaff;
+
+    --kp-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --kp-shadow-lift: 0 6px 18px rgba(0, 0, 0, 0.4);
+  }
+}
