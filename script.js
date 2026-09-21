@@ -76,7 +76,7 @@ function linksMarkup(links) {
   return links
     .map(
       (link) => `
-        <a class="portal-link kp-chip" href="${link.href}" target="_blank" rel="noopener">
+        <a class="portal-link kp-chip" href="${link.href}" target="_blank" rel="noopener" title="${link.label}">
           <span>${link.label}</span>
         </a>
       `
