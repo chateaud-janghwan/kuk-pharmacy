@@ -183,7 +183,7 @@ function createStackedDeptCard(deptLeft, deptRight) {
 }
 
 const grid = document.querySelector("#departmentGrid");
-grid.appendChild(createStackedDeptCard(departments[0], commonDepartment));
+grid.appendChild(createStackedDeptCard(commonDepartment, departments[0]));
 grid.appendChild(createMergedCard(mergedDepartments[0], mergedDepartments[1], mergedDepartments[2]));
 
 const allDepartments = [...departments, commonDepartment, ...mergedDepartments];
