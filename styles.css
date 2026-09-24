@@ -222,60 +222,6 @@ main {
   font-weight: 700;
 }
 
-/* ===== usage stats ===== */
-.usage-stats {
-  margin: 14px 0 0;
-  padding: 16px 20px;
-}
-
-.usage-stats-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.usage-stats-head h2 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-
-.usage-stats-total {
-  color: var(--kp-faint);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.usage-stats-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
-}
-
-.usage-stat-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--kp-surface-2);
-}
-
-.usage-stat-name {
-  color: var(--kp-muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.usage-stat-count {
-  font-size: 14px;
-  font-weight: 800;
-}
-
 /* ===== department grid ===== */
 .department-grid {
   display: grid;
