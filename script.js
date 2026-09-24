@@ -21,6 +21,14 @@ const departments = [
   },
 ];
 
+const commonDepartment = {
+  title: "공통",
+  kicker: "Common",
+  accent: "#64748b",
+  icon: "common",
+  links: [{ label: "통합매뉴얼", href: "https://pharm-hub-75r.pages.dev/" }],
+};
+
 const mergedDepartments = [
   {
     title: "약무정보실",
@@ -70,6 +78,12 @@ const iconPaths = {
     <path d="M8 3h8" />
     <path d="M8 15h8" />
   `,
+  common: `
+    <rect x="4" y="4" width="7" height="7" rx="1.5" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" />
+  `,
 };
 
 function linksMarkup(links) {
@@ -82,28 +96,6 @@ function linksMarkup(links) {
       `
     )
     .join("");
-}
-
-function createDepartmentCard(department) {
-  const article = document.createElement("article");
-  article.className = "department-card kp-card kp-card--interactive";
-  article.dataset.departments = department.title;
-  article.style.setProperty("--accent", department.accent);
-
-  article.innerHTML = `
-    <div class="card-top">
-      <div>
-        <p class="card-kicker">${department.kicker}</p>
-        <h3>${department.title}</h3>
-      </div>
-      <div class="card-icon kp-icon-badge" aria-hidden="true">
-        <svg viewBox="0 0 24 24">${iconPaths[department.icon]}</svg>
-      </div>
-    </div>
-    <div class="link-list">${linksMarkup(department.links)}</div>
-  `;
-
-  return article;
 }
 
 function miniBlock(department) {
@@ -153,11 +145,48 @@ function createMergedCard(deptLeft, deptTop, deptBottom) {
   return article;
 }
 
+// 병동약국 카드 옆에 공통(통합매뉴얼)을 세로 구분선으로 이어붙여, 그리드 칸 수를 늘리지 않는다.
+function createStackedDeptCard(deptLeft, deptRight) {
+  const article = document.createElement("article");
+  article.className = "department-card department-card--merged kp-card kp-card--interactive department-card--stacked";
+  article.dataset.departments = `${deptLeft.title} ${deptRight.title}`;
+
+  article.innerHTML = `
+    <div class="merged-half" style="--accent:${deptLeft.accent}">
+      <div class="card-top">
+        <div>
+          <p class="card-kicker">${deptLeft.kicker}</p>
+          <h3>${deptLeft.title}</h3>
+        </div>
+        <div class="card-icon kp-icon-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24">${iconPaths[deptLeft.icon]}</svg>
+        </div>
+      </div>
+      <div class="link-list">${linksMarkup(deptLeft.links)}</div>
+    </div>
+    <div class="merged-divider" aria-hidden="true"></div>
+    <div class="merged-half" style="--accent:${deptRight.accent}">
+      <div class="card-top">
+        <div>
+          <p class="card-kicker">${deptRight.kicker}</p>
+          <h3>${deptRight.title}</h3>
+        </div>
+        <div class="card-icon kp-icon-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24">${iconPaths[deptRight.icon]}</svg>
+        </div>
+      </div>
+      <div class="link-list">${linksMarkup(deptRight.links)}</div>
+    </div>
+  `;
+
+  return article;
+}
+
 const grid = document.querySelector("#departmentGrid");
-departments.forEach((department) => grid.appendChild(createDepartmentCard(department)));
+grid.appendChild(createStackedDeptCard(departments[0], commonDepartment));
 grid.appendChild(createMergedCard(mergedDepartments[0], mergedDepartments[1], mergedDepartments[2]));
 
-const allDepartments = [...departments, ...mergedDepartments];
+const allDepartments = [...departments, commonDepartment, ...mergedDepartments];
 
 // ===== 검색 =====
 const portalSearch = document.querySelector("#portalSearch");
