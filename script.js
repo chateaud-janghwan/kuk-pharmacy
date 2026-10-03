@@ -15,8 +15,6 @@ const departments = [
       { label: "산제리스트", href: "https://powderlist.pages.dev" },
       { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
       { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev" },
-      { label: "매뉴얼챗봇", href: "https://pharm-manual.pages.dev" },
-      { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
     ],
   },
 ];
@@ -39,6 +37,7 @@ const mergedDepartments = [
       { label: "신약변경알림", href: "https://pharmacy-notification.pages.dev/" },
       { label: "코드유효성확인", href: "https://drug-code-validator.pages.dev" },
       { label: "약품코드통계", href: "https://drugcode-stats.pages.dev/" },
+      { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
     ],
   },
   {
