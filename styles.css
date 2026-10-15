@@ -285,6 +285,13 @@ main {
   grid-template-columns: repeat(4, 1fr);
 }
 
+.portal-link.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  text-decoration: line-through;
+}
+
 .portal-link.is-hit {
   background: var(--kp-blue-weak);
   color: var(--kp-blue-strong);

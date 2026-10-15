@@ -14,7 +14,7 @@ const departments = [
       },
       { label: "산제리스트", href: "https://powderlist.pages.dev" },
       { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
-      { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev" },
+      { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev", disabled: true },
     ],
   },
 ];
@@ -87,8 +87,14 @@ const iconPaths = {
 
 function linksMarkup(links) {
   return links
-    .map(
-      (link) => `
+    .map((link) =>
+      link.disabled
+        ? `
+        <span class="portal-link kp-chip is-disabled" aria-disabled="true" title="${link.label} (현재 사용 중지)">
+          <span>${link.label}</span>
+        </span>
+      `
+        : `
         <a class="portal-link kp-chip" href="${link.href}" target="_blank" rel="noopener" title="${link.label}">
           <span>${link.label}</span>
         </a>
