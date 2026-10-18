@@ -15,6 +15,7 @@ const departments = [
       { label: "산제리스트", href: "https://powderlist.pages.dev" },
       { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
       { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev", disabled: true },
+      { label: "알약계수기", href: "https://pill-counter-825.pages.dev" },
     ],
   },
 ];
