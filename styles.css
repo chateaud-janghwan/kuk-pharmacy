@@ -338,15 +338,6 @@ main {
   background: var(--kp-line);
 }
 
-/* 공통(작은 블록) : 병동약국(넓은 영역) = 1.2 : 2 */
-.department-card--stacked .merged-half--stack {
-  flex: 1.2;
-}
-
-.department-card--stacked .merged-half:not(.merged-half--stack) {
-  flex: 2;
-}
-
 .department-card--merged .stack-block .link-list {
   grid-template-columns: 1fr;
 }
@@ -378,6 +369,47 @@ main {
 }
 
 .department-card--merged .portal-link {
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+/* ===== ward card (왼쪽 절반 전체) / quad card (오른쪽 절반: 약무정보실 + 외래·임상·공통) ===== */
+.department-card.department-card--ward .link-list {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.department-card--quad {
+  padding: 0;
+}
+
+.department-card--quad .stack-block {
+  padding: 20px;
+}
+
+.quad-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.department-card--quad .quad-row .link-list {
+  grid-template-columns: 1fr;
+}
+
+.department-card--quad .quad-row--top .link-list {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* 아랫줄은 칸이 좁아 아이콘을 빼고, 영문 부제는 한 줄로 둔다 */
+.quad-row--bottom .card-icon {
+  display: none;
+}
+
+.quad-row--bottom .card-kicker {
+  white-space: nowrap;
+}
+
+.department-card--quad .portal-link {
   padding: 0 8px;
   font-size: 12px;
 }
@@ -446,6 +478,14 @@ main {
   }
 
   .department-card--merged .portal-link {
+    font-size: 13px;
+  }
+
+  .quad-row--bottom {
+    flex-direction: column;
+  }
+
+  .department-card--quad .portal-link {
     font-size: 13px;
   }
 }

@@ -1,5 +1,5 @@
-// 병동약국은 단독 카드로, 나머지 세 부서는 카드 하나를 절반씩 나눠 담는다
-// (좌: 약무정보실 / 우: 외래약국·임상지원실 상하 분할).
+// 병동약국은 단독 카드(왼쪽 절반), 나머지 부서와 공통은 한 카드(오른쪽 절반)에 나눠 담는다
+// (위: 약무정보실 / 아래: 외래약국·임상지원실·공통).
 const departments = [
   {
     title: "병동약국",
@@ -122,59 +122,40 @@ function miniBlock(department) {
   `;
 }
 
-// 왼쪽 절반 = deptLeft 전체, 오른쪽 절반 = deptTop / deptBottom 을 상하로 분할.
-function createMergedCard(deptLeft, deptTop, deptBottom) {
+// 왼쪽 절반 = 병동약국 단독 카드.
+function createWardCard(department) {
   const article = document.createElement("article");
-  article.className = "department-card department-card--merged kp-card kp-card--interactive";
-  article.dataset.departments = `${deptLeft.title} ${deptTop.title} ${deptBottom.title}`;
+  article.className = "department-card department-card--ward kp-card kp-card--interactive";
+  article.dataset.departments = department.title;
+  article.style.setProperty("--accent", department.accent);
 
   article.innerHTML = `
-    <div class="merged-half" style="--accent:${deptLeft.accent}">
-      <div class="card-top">
-        <div>
-          <p class="card-kicker">${deptLeft.kicker}</p>
-          <h3>${deptLeft.title}</h3>
-        </div>
-        <div class="card-icon kp-icon-badge" aria-hidden="true">
-          <svg viewBox="0 0 24 24">${iconPaths[deptLeft.icon]}</svg>
-        </div>
+    <div class="card-top">
+      <div>
+        <p class="card-kicker">${department.kicker}</p>
+        <h3>${department.title}</h3>
       </div>
-      <div class="link-list">${linksMarkup(deptLeft.links)}</div>
+      <div class="card-icon kp-icon-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24">${iconPaths[department.icon]}</svg>
+      </div>
     </div>
-    <div class="merged-divider" aria-hidden="true"></div>
-    <div class="merged-half merged-half--stack">
-      ${miniBlock(deptTop)}
-      <div class="stack-divider" aria-hidden="true"></div>
-      ${miniBlock(deptBottom)}
-    </div>
+    <div class="link-list">${linksMarkup(department.links)}</div>
   `;
 
   return article;
 }
 
-// 공통(통합매뉴얼)은 외래약국·임상지원실과 같은 작은 블록으로 왼쪽에 두고,
-// 병동약국이 같은 카드의 나머지 넓은 영역을 차지한다. 그리드 칸 수는 늘리지 않는다.
-function createStackedDeptCard(deptLeft, deptRight) {
+// 오른쪽 절반 = 윗줄 deptTop, 아랫줄 deptBottoms(여러 칸)를 한 카드에 담는다.
+function createQuadCard(deptTop, deptBottoms) {
   const article = document.createElement("article");
-  article.className = "department-card department-card--merged kp-card kp-card--interactive department-card--stacked";
-  article.dataset.departments = `${deptLeft.title} ${deptRight.title}`;
+  article.className = "department-card department-card--quad kp-card kp-card--interactive";
+  article.dataset.departments = [deptTop, ...deptBottoms].map((d) => d.title).join(" ");
 
   article.innerHTML = `
-    <div class="merged-half merged-half--stack">
-      ${miniBlock(deptLeft)}
-    </div>
-    <div class="merged-divider" aria-hidden="true"></div>
-    <div class="merged-half" style="--accent:${deptRight.accent}">
-      <div class="card-top">
-        <div>
-          <p class="card-kicker">${deptRight.kicker}</p>
-          <h3>${deptRight.title}</h3>
-        </div>
-        <div class="card-icon kp-icon-badge" aria-hidden="true">
-          <svg viewBox="0 0 24 24">${iconPaths[deptRight.icon]}</svg>
-        </div>
-      </div>
-      <div class="link-list">${linksMarkup(deptRight.links)}</div>
+    <div class="quad-row quad-row--top">${miniBlock(deptTop)}</div>
+    <div class="stack-divider" aria-hidden="true"></div>
+    <div class="quad-row quad-row--bottom">
+      ${deptBottoms.map(miniBlock).join('<div class="merged-divider" aria-hidden="true"></div>')}
     </div>
   `;
 
@@ -182,8 +163,8 @@ function createStackedDeptCard(deptLeft, deptRight) {
 }
 
 const grid = document.querySelector("#departmentGrid");
-grid.appendChild(createStackedDeptCard(commonDepartment, departments[0]));
-grid.appendChild(createMergedCard(mergedDepartments[0], mergedDepartments[1], mergedDepartments[2]));
+grid.appendChild(createWardCard(departments[0]));
+grid.appendChild(createQuadCard(mergedDepartments[0], [mergedDepartments[1], mergedDepartments[2], commonDepartment]));
 
 const allDepartments = [...departments, commonDepartment, ...mergedDepartments];
 
