@@ -375,7 +375,13 @@ main {
 
 /* ===== ward card (왼쪽 절반 전체) / quad card (오른쪽 절반: 약무정보실 + 외래·임상·공통) ===== */
 .department-card.department-card--ward .link-list {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.department-card--ward .portal-link {
+  padding: 0 4px;
+  font-size: 11.5px;
 }
 
 .department-card--quad {
@@ -485,7 +491,13 @@ main {
     flex-direction: column;
   }
 
-  .department-card--quad .portal-link {
+  .department-card--quad .portal-link,
+  .department-card--ward .portal-link {
+    padding: 0 8px;
     font-size: 13px;
+  }
+
+  .department-card.department-card--ward .link-list {
+    gap: 8px;
   }
 }
