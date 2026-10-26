@@ -415,9 +415,18 @@ main {
   white-space: nowrap;
 }
 
+/* 바로가기 버튼은 병동약국과 같은 크기(글자 11.5px · 간격 6px · 폭 약 100px)로 맞춘다 */
 .department-card--quad .portal-link {
-  padding: 0 8px;
-  font-size: 12px;
+  padding: 0 4px;
+  font-size: 11.5px;
+}
+
+.department-card--quad .link-list {
+  gap: 6px;
+}
+
+.department-card--quad .quad-row--bottom .link-list {
+  grid-template-columns: minmax(0, 100px);
 }
 
 .empty-state {
