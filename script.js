@@ -152,24 +152,16 @@ function createMergedCard(deptLeft, deptTop, deptBottom) {
   return article;
 }
 
-// 병동약국 카드 옆에 공통(통합매뉴얼)을 세로 구분선으로 이어붙여, 그리드 칸 수를 늘리지 않는다.
+// 공통(통합매뉴얼)은 외래약국·임상지원실과 같은 작은 블록으로 왼쪽에 두고,
+// 병동약국이 같은 카드의 나머지 넓은 영역을 차지한다. 그리드 칸 수는 늘리지 않는다.
 function createStackedDeptCard(deptLeft, deptRight) {
   const article = document.createElement("article");
   article.className = "department-card department-card--merged kp-card kp-card--interactive department-card--stacked";
   article.dataset.departments = `${deptLeft.title} ${deptRight.title}`;
 
   article.innerHTML = `
-    <div class="merged-half" style="--accent:${deptLeft.accent}">
-      <div class="card-top">
-        <div>
-          <p class="card-kicker">${deptLeft.kicker}</p>
-          <h3>${deptLeft.title}</h3>
-        </div>
-        <div class="card-icon kp-icon-badge" aria-hidden="true">
-          <svg viewBox="0 0 24 24">${iconPaths[deptLeft.icon]}</svg>
-        </div>
-      </div>
-      <div class="link-list">${linksMarkup(deptLeft.links)}</div>
+    <div class="merged-half merged-half--stack">
+      ${miniBlock(deptLeft)}
     </div>
     <div class="merged-divider" aria-hidden="true"></div>
     <div class="merged-half" style="--accent:${deptRight.accent}">

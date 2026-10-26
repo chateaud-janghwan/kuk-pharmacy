@@ -338,6 +338,19 @@ main {
   background: var(--kp-line);
 }
 
+/* 공통(작은 블록) : 병동약국(넓은 영역) = 1.2 : 2 */
+.department-card--stacked .merged-half--stack {
+  flex: 1.2;
+}
+
+.department-card--stacked .merged-half:not(.merged-half--stack) {
+  flex: 2;
+}
+
+.department-card--merged .stack-block .link-list {
+  grid-template-columns: 1fr;
+}
+
 .card-top--compact {
   margin-bottom: 12px;
 }
