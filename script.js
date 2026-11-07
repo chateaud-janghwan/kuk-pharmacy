@@ -18,6 +18,7 @@ const departments = [
       { label: "코드날짜계산기", href: "https://pharm-date-calculator.pages.dev" },
       { label: "약품리스트편집기", href: "https://drugmap-editor.pages.dev/" },
       { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
+      { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
     ],
   },
 ];
@@ -40,7 +41,6 @@ const mergedDepartments = [
       { label: "신약변경알림", href: "https://pharmacy-notification.pages.dev/" },
       { label: "코드유효성확인", href: "https://drug-code-validator.pages.dev" },
       { label: "약품코드통계", href: "https://drugcode-stats.pages.dev/" },
-      { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
     ],
   },
   {
