@@ -1,5 +1,5 @@
 // 병동약국은 단독 카드(왼쪽 절반), 나머지 부서와 공통은 한 카드(오른쪽 절반)에 나눠 담는다
-// (위: 약무정보실 / 아래: 외래약국·임상지원실·공통).
+// (위: 약무정보실 / 아래: 외래약국·공통).
 const departments = [
   {
     title: "병동약국",
@@ -17,6 +17,7 @@ const departments = [
       { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev" },
       { label: "코드날짜계산기", href: "https://pharm-date-calculator.pages.dev" },
       { label: "약품리스트편집기", href: "https://drugmap-editor.pages.dev/" },
+      { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
     ],
   },
 ];
@@ -49,13 +50,6 @@ const mergedDepartments = [
     icon: "outpatient",
     links: [{ label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/" }],
   },
-  {
-    title: "임상지원실",
-    kicker: "Clinical Support",
-    accent: "#8b5cf6",
-    icon: "clinical",
-    links: [{ label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" }],
-  },
 ];
 
 const iconPaths = {
@@ -73,11 +67,6 @@ const iconPaths = {
     <circle cx="12" cy="12" r="9" />
     <path d="M12 10v6" />
     <path d="M12 7h.01" />
-  `,
-  clinical: `
-    <path d="M10 3v6l-5 8a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-8V3" />
-    <path d="M8 3h8" />
-    <path d="M8 15h8" />
   `,
   common: `
     <rect x="4" y="4" width="7" height="7" rx="1.5" />
@@ -164,7 +153,7 @@ function createQuadCard(deptTop, deptBottoms) {
 
 const grid = document.querySelector("#departmentGrid");
 grid.appendChild(createWardCard(departments[0]));
-grid.appendChild(createQuadCard(mergedDepartments[0], [mergedDepartments[1], mergedDepartments[2], commonDepartment]));
+grid.appendChild(createQuadCard(mergedDepartments[0], [mergedDepartments[1], commonDepartment]));
 
 const allDepartments = [...departments, commonDepartment, ...mergedDepartments];
 

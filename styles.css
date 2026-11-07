@@ -297,7 +297,7 @@ main {
   color: var(--kp-blue-strong);
 }
 
-/* ===== merged card (약무정보실 | 외래약국 / 임상지원실 절반씩) ===== */
+/* ===== merged card (약무정보실 | 외래약국 절반씩) ===== */
 .department-card--merged {
   flex-direction: row;
   padding: 0;
@@ -373,7 +373,7 @@ main {
   font-size: 12px;
 }
 
-/* ===== ward card (왼쪽 절반 전체) / quad card (오른쪽 절반: 약무정보실 + 외래·임상·공통) ===== */
+/* ===== ward card (왼쪽 절반 전체) / quad card (오른쪽 절반: 약무정보실 + 외래·공통) ===== */
 .department-card.department-card--ward .link-list {
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
