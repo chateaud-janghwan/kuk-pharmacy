@@ -19,6 +19,7 @@ const departments = [
       { label: "약품리스트편집기", href: "https://drugmap-editor.pages.dev/" },
       { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
       { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
+      { label: "재고2관리", href: "https://surplus-drugs.pages.dev" },
     ],
   },
 ];
