@@ -29,7 +29,10 @@ const commonDepartment = {
   kicker: "Common",
   accent: "#64748b",
   icon: "common",
-  links: [{ label: "통합매뉴얼", href: "https://pharm-hub-75r.pages.dev/" }],
+  links: [
+    { label: "통합매뉴얼", href: "https://pharm-hub-75r.pages.dev/" },
+    { label: "점심메뉴", href: "https://lunch-menu-5ok.pages.dev/" },
+  ],
 };
 
 const mergedDepartments = [
