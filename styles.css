@@ -398,6 +398,12 @@ main {
   min-height: 0;
 }
 
+/* 칸 안 버튼이 늘어나면 카드도 같이 커지게 한다(고정 높이로 눌려 넘치지 않도록) */
+.department-card--quad .quad-row,
+.department-card--quad .stack-block {
+  min-height: auto;
+}
+
 .department-card--quad .quad-row .link-list {
   grid-template-columns: 1fr;
 }
