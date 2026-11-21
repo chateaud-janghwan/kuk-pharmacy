@@ -20,7 +20,6 @@ const departments = [
       { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
       { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
       { label: "재고2관리", href: "https://surplus-drugs.pages.dev" },
-      { label: "영상기법", href: "https://video-technique-dictionary.pages.dev/" },
     ],
   },
 ];
