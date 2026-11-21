@@ -172,7 +172,7 @@ portalSearch.addEventListener("input", (event) => {
 
 document.addEventListener("keydown", (event) => {
   const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName || "");
-  if (event.key === "/" && !typing) {
+  if (event.key === "/" && !typing && !panelPortal.hidden) {
     event.preventDefault();
     portalSearch.focus();
   } else if (event.key === "Escape" && document.activeElement === portalSearch) {
@@ -267,3 +267,172 @@ setInterval(updateClock, 15000);
     .catch(() => {});
 })();
 
+// ===== 탭 · 개인 공간 =====
+// 개인 바로가기는 이 브라우저(localStorage)에만 저장된다. 비밀번호는 소금+해시(PBKDF2)로만 들어 있어
+// 소스에서 바로 읽히지는 않지만, 짧은 숫자 비밀번호라 가벼운 가림막 수준이다.
+const PIN_SALT = "03509bfe3b8668ab7266feb07fa73b83";
+const PIN_HASH = "385106126a015e5f255b23627ca9510780feab1b6cbeb9aaab1caa9aa253ccfa";
+const PERSONAL_KEY = "kp_personal_links";
+const UNLOCK_KEY = "kp_personal_open";
+
+const tabPortal = document.querySelector("#tabPortal");
+const tabPersonal = document.querySelector("#tabPersonal");
+const panelPortal = document.querySelector("#panelPortal");
+const panelPersonal = document.querySelector("#panelPersonal");
+const lockForm = document.querySelector("#lockForm");
+const lockMsg = document.querySelector("#lockMsg");
+const pinInput = document.querySelector("#pinInput");
+const personalBody = document.querySelector("#personalBody");
+const personalLinks = document.querySelector("#personalLinks");
+const personalEmpty = document.querySelector("#personalEmpty");
+const addForm = document.querySelector("#addForm");
+
+function hexToBytes(hex) {
+  return Uint8Array.from(hex.match(/../g).map((b) => parseInt(b, 16)));
+}
+
+async function pinMatches(pin) {
+  if (!window.crypto || !crypto.subtle) throw new Error("secure-context");
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits(
+    { name: "PBKDF2", hash: "SHA-256", salt: hexToBytes(PIN_SALT), iterations: 200000 },
+    key,
+    256
+  );
+  const got = Array.from(new Uint8Array(bits), (b) => b.toString(16).padStart(2, "0")).join("");
+  return got === PIN_HASH;
+}
+
+function loadPersonal() {
+  try {
+    const list = JSON.parse(localStorage.getItem(PERSONAL_KEY) || "[]");
+    return Array.isArray(list) ? list.filter((l) => l && l.label && l.href) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function savePersonal(list) {
+  try {
+    localStorage.setItem(PERSONAL_KEY, JSON.stringify(list));
+  } catch (e) {}
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+
+function renderPersonal() {
+  const list = loadPersonal();
+  personalLinks.innerHTML = list
+    .map(
+      (link, index) => `
+        <span class="chip-wrap">
+          <a class="portal-link kp-chip" href="${escapeHtml(link.href)}" target="_blank" rel="noopener" title="${escapeHtml(link.label)}">
+            <span>${escapeHtml(link.label)}</span>
+          </a>
+          <button class="chip-del" type="button" data-index="${index}" aria-label="${escapeHtml(link.label)} 삭제">×</button>
+        </span>
+      `
+    )
+    .join("");
+  personalEmpty.hidden = list.length > 0;
+}
+
+function showPersonalBody(open) {
+  lockForm.hidden = open;
+  personalBody.hidden = !open;
+  if (open) {
+    renderPersonal();
+  } else {
+    personalBody.classList.remove("is-editing");
+    addForm.hidden = true;
+    pinInput.value = "";
+    lockMsg.textContent = "";
+  }
+}
+
+function showTab(name) {
+  const personal = name === "personal";
+  tabPortal.classList.toggle("is-active", !personal);
+  tabPersonal.classList.toggle("is-active", personal);
+  tabPortal.setAttribute("aria-selected", String(!personal));
+  tabPersonal.setAttribute("aria-selected", String(personal));
+  panelPortal.hidden = personal;
+  panelPersonal.hidden = !personal;
+  if (personal) {
+    let open = false;
+    try {
+      open = sessionStorage.getItem(UNLOCK_KEY) === "1";
+    } catch (e) {}
+    showPersonalBody(open);
+    if (!open) pinInput.focus();
+  }
+}
+
+tabPortal.addEventListener("click", () => showTab("portal"));
+tabPersonal.addEventListener("click", () => showTab("personal"));
+
+lockForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  lockMsg.textContent = "";
+  try {
+    if (await pinMatches(pinInput.value)) {
+      try {
+        sessionStorage.setItem(UNLOCK_KEY, "1");
+      } catch (e) {}
+      showPersonalBody(true);
+    } else {
+      lockMsg.textContent = "비밀번호가 맞지 않습니다.";
+      pinInput.select();
+    }
+  } catch (e) {
+    lockMsg.textContent = "이 환경에서는 잠금을 확인할 수 없습니다. (https 주소로 열어 주세요)";
+  }
+});
+
+document.querySelector("#lockBtn").addEventListener("click", () => {
+  try {
+    sessionStorage.removeItem(UNLOCK_KEY);
+  } catch (e) {}
+  showPersonalBody(false);
+  pinInput.focus();
+});
+
+document.querySelector("#editBtn").addEventListener("click", () => {
+  const editing = personalBody.classList.toggle("is-editing");
+  addForm.hidden = !editing;
+  document.querySelector("#editBtn").textContent = editing ? "완료" : "편집";
+  if (editing) document.querySelector("#addLabel").focus();
+});
+
+addForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const label = document.querySelector("#addLabel").value.trim();
+  let href = document.querySelector("#addHref").value.trim();
+  if (!label || !href) return;
+  if (!/^https?:\/\//i.test(href)) href = "https://" + href;
+  try {
+    const url = new URL(href);
+    if (!/^https?:$/.test(url.protocol)) return;
+    href = url.href;
+  } catch (e) {
+    document.querySelector("#addHref").setCustomValidity("주소 형식이 올바르지 않습니다.");
+    document.querySelector("#addHref").reportValidity();
+    document.querySelector("#addHref").setCustomValidity("");
+    return;
+  }
+  savePersonal([...loadPersonal(), { label, href }]);
+  addForm.reset();
+  renderPersonal();
+  document.querySelector("#addLabel").focus();
+});
+
+personalLinks.addEventListener("click", (event) => {
+  const btn = event.target.closest(".chip-del");
+  if (!btn) return;
+  const list = loadPersonal();
+  list.splice(Number(btn.dataset.index), 1);
+  savePersonal(list);
+  renderPersonal();
+});

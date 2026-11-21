@@ -55,17 +55,57 @@
         </div>
       </section>
 
-      <label class="search-box kp-input" aria-label="바로가기 검색">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="11" cy="11" r="7" />
-          <path d="m20 20-3.8-3.8" />
-        </svg>
-        <input id="portalSearch" type="search" placeholder="업무 또는 바로가기 검색" />
-        <kbd aria-hidden="true">/</kbd>
-      </label>
+      <div class="tabs" role="tablist" aria-label="화면 선택">
+        <button class="tab is-active" id="tabPortal" role="tab" aria-selected="true" type="button">업무포털</button>
+        <button class="tab" id="tabPersonal" role="tab" aria-selected="false" type="button">개인</button>
+      </div>
 
-      <section class="department-grid" id="departmentGrid" aria-live="polite"></section>
-      <p class="empty-state" id="emptyState" hidden>검색 결과가 없습니다.</p>
+      <div id="panelPortal">
+        <label class="search-box kp-input" aria-label="바로가기 검색">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.8-3.8" />
+          </svg>
+          <input id="portalSearch" type="search" placeholder="업무 또는 바로가기 검색" />
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+
+        <section class="department-grid" id="departmentGrid" aria-live="polite"></section>
+        <p class="empty-state" id="emptyState" hidden>검색 결과가 없습니다.</p>
+      </div>
+
+      <section class="personal" id="panelPersonal" hidden aria-label="개인 공간">
+        <form class="lock kp-card" id="lockForm" autocomplete="off">
+          <strong>개인 공간</strong>
+          <p>비밀번호를 입력하세요.</p>
+          <div class="lock-row">
+            <input id="pinInput" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호" />
+            <button class="kp-btn kp-btn--primary" type="submit">열기</button>
+          </div>
+          <p class="lock-msg" id="lockMsg" role="alert"></p>
+        </form>
+
+        <div class="personal-body kp-card" id="personalBody" hidden>
+          <div class="card-top">
+            <div>
+              <p class="card-kicker">Personal</p>
+              <h3>개인 바로가기</h3>
+            </div>
+            <div class="personal-actions">
+              <button class="kp-btn kp-btn--secondary" id="editBtn" type="button">편집</button>
+              <button class="kp-btn kp-btn--secondary" id="lockBtn" type="button">잠그기</button>
+            </div>
+          </div>
+          <div class="link-list personal-links" id="personalLinks"></div>
+          <p class="personal-empty" id="personalEmpty" hidden>아직 바로가기가 없습니다. 편집을 눌러 추가하세요.</p>
+          <form class="personal-add" id="addForm" hidden autocomplete="off">
+            <input id="addLabel" type="text" placeholder="이름" maxlength="20" aria-label="이름" required />
+            <input id="addHref" type="text" inputmode="url" placeholder="주소 (https://…)" aria-label="주소" required />
+            <button class="kp-btn kp-btn--primary" type="submit">추가</button>
+          </form>
+          <p class="personal-note">이 기기의 이 브라우저에만 저장됩니다.</p>
+        </div>
+      </section>
     </main>
 
     <footer class="credit">chateaud.</footer>

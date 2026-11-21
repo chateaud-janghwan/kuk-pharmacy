@@ -435,6 +435,186 @@ main {
   grid-template-columns: minmax(0, 100px);
 }
 
+/* ===== 탭 (업무포털 / 개인) ===== */
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  margin: 18px 0 0;
+  padding: 4px;
+  border-radius: var(--kp-r-pill);
+  background: var(--kp-surface);
+  box-shadow: var(--kp-shadow);
+}
+
+.tab {
+  padding: 8px 18px;
+  border: 0;
+  border-radius: var(--kp-r-pill);
+  background: transparent;
+  color: var(--kp-muted);
+  font-family: var(--kp-font);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.tab.is-active {
+  background: var(--kp-blue);
+  color: #ffffff;
+}
+
+#panelPortal .search-box {
+  margin-top: 14px;
+}
+
+/* ===== 개인 공간 ===== */
+.personal {
+  margin-top: 14px;
+}
+
+.lock {
+  display: flex;
+  max-width: 360px;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.lock strong {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.lock p {
+  margin: 0;
+  color: var(--kp-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lock-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.lock-row input,
+.personal-add input {
+  min-width: 0;
+  flex: 1;
+  height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--kp-r-md);
+  background: var(--kp-surface-2);
+  color: var(--kp-text);
+  font-family: var(--kp-font);
+  font-size: 16px;
+  font-weight: 600;
+  outline: 0;
+}
+
+.lock-row input:focus,
+.personal-add input:focus {
+  box-shadow: 0 0 0 2px var(--kp-blue);
+}
+
+.lock-row .kp-btn,
+.personal-add .kp-btn,
+.personal-actions .kp-btn {
+  height: 44px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+
+.lock .lock-msg {
+  min-height: 1.2em;
+  color: #e5484d;
+}
+
+.personal-body {
+  padding: 20px;
+}
+
+.personal-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.personal-actions .kp-btn {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.personal-links {
+  grid-template-columns: repeat(auto-fill, 100px);
+  gap: 6px;
+}
+
+.personal-links .portal-link {
+  padding: 0 4px;
+  font-size: 11.5px;
+}
+
+.personal-links .chip-wrap {
+  position: relative;
+  display: flex;
+}
+
+.personal-links .chip-wrap .portal-link {
+  flex: 1;
+}
+
+.personal-body.is-editing .chip-del {
+  display: grid;
+}
+
+.chip-del {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: none;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #e5484d;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.personal-add {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.personal-empty,
+.personal-note {
+  margin: 14px 0 0;
+  color: var(--kp-faint);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.personal-empty[hidden],
+.personal-add[hidden],
+.personal[hidden],
+#panelPortal[hidden],
+.personal-body[hidden],
+.lock[hidden] {
+  display: none;
+}
+
 .empty-state {
   margin: 28px 0;
   color: var(--kp-muted);
@@ -514,5 +694,17 @@ main {
 
   .department-card.department-card--ward .link-list {
     gap: 8px;
+  }
+
+  .personal-links {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .personal-add {
+    flex-wrap: wrap;
+  }
+
+  .personal-add input {
+    flex-basis: 100%;
   }
 }
