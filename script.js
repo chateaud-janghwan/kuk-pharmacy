@@ -268,13 +268,12 @@ setInterval(updateClock, 15000);
 })();
 
 // ===== 탭 · 개인 공간 =====
-// 개인 바로가기는 이 브라우저(localStorage)에만 저장된다. 비밀번호는 소금+해시(PBKDF2)로만 들어 있어
-// 소스에서 바로 읽히지는 않지만, 짧은 숫자 비밀번호라 가벼운 가림막 수준이다.
-const PIN_SALT = "03509bfe3b8668ab7266feb07fa73b83";
-const PIN_HASH = "385106126a015e5f255b23627ca9510780feab1b6cbeb9aaab1caa9aa253ccfa";
-const PERSONAL_KEY = "kp_personal_links";
-// 열림 상태는 메모리에만 둔다. 새로고침하거나 다시 접속하면 매번 비밀번호를 묻는다.
-let personalOpen = false;
+// 개인 바로가기는 서버(Cloudflare KV)에 저장되어 어느 기기에서 열어도 같다. 비밀번호는 서버에서만 확인하고
+// (functions/api/personal.js), 열림 상태는 메모리에만 둔다. 새로고침하거나 다시 접속하면 매번 묻는다.
+const LEGACY_KEY = "kp_personal_links"; // 예전에 이 브라우저에만 저장하던 목록(한 번 서버로 옮기고 지운다)
+
+let personalPin = "";
+let personalList = [];
 
 const tabPortal = document.querySelector("#tabPortal");
 const tabPersonal = document.querySelector("#tabPersonal");
@@ -286,37 +285,22 @@ const pinInput = document.querySelector("#pinInput");
 const personalBody = document.querySelector("#personalBody");
 const personalLinks = document.querySelector("#personalLinks");
 const personalEmpty = document.querySelector("#personalEmpty");
+const personalNote = document.querySelector("#personalNote");
 const addForm = document.querySelector("#addForm");
 
-function hexToBytes(hex) {
-  return Uint8Array.from(hex.match(/../g).map((b) => parseInt(b, 16)));
-}
-
-async function pinMatches(pin) {
-  if (!window.crypto || !crypto.subtle) throw new Error("secure-context");
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", hash: "SHA-256", salt: hexToBytes(PIN_SALT), iterations: 200000 },
-    key,
-    256
-  );
-  const got = Array.from(new Uint8Array(bits), (b) => b.toString(16).padStart(2, "0")).join("");
-  return got === PIN_HASH;
-}
-
-function loadPersonal() {
-  try {
-    const list = JSON.parse(localStorage.getItem(PERSONAL_KEY) || "[]");
-    return Array.isArray(list) ? list.filter((l) => l && l.label && l.href) : [];
-  } catch (e) {
-    return [];
+async function personalApi(method, links) {
+  const res = await fetch("/api/personal", {
+    method,
+    headers: { "X-Pin": personalPin, ...(links ? { "Content-Type": "application/json" } : {}) },
+    body: links ? JSON.stringify({ links }) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const error = new Error(data.error || "서버에 연결할 수 없습니다.");
+    error.status = res.status;
+    throw error;
   }
-}
-
-function savePersonal(list) {
-  try {
-    localStorage.setItem(PERSONAL_KEY, JSON.stringify(list));
-  } catch (e) {}
+  return Array.isArray(data.links) ? data.links : [];
 }
 
 function escapeHtml(text) {
@@ -324,8 +308,7 @@ function escapeHtml(text) {
 }
 
 function renderPersonal() {
-  const list = loadPersonal();
-  personalLinks.innerHTML = list
+  personalLinks.innerHTML = personalList
     .map(
       (link, index) => `
         <span class="chip-wrap">
@@ -337,20 +320,33 @@ function renderPersonal() {
       `
     )
     .join("");
-  personalEmpty.hidden = list.length > 0;
+  personalEmpty.hidden = personalList.length > 0;
+}
+
+function setNote(text, isError) {
+  personalNote.textContent = text;
+  personalNote.classList.toggle("is-error", Boolean(isError));
 }
 
 function showPersonalBody(open) {
   lockForm.hidden = open;
   personalBody.hidden = !open;
   if (open) {
+    setNote("어느 기기에서 열어도 같은 목록이 보입니다.");
     renderPersonal();
   } else {
     personalBody.classList.remove("is-editing");
+    document.querySelector("#editBtn").textContent = "편집";
     addForm.hidden = true;
     pinInput.value = "";
     lockMsg.textContent = "";
   }
+}
+
+function lockPersonal() {
+  personalPin = "";
+  personalList = [];
+  showPersonalBody(false);
 }
 
 function showTab(name) {
@@ -362,9 +358,28 @@ function showTab(name) {
   panelPortal.hidden = personal;
   panelPersonal.hidden = !personal;
   if (personal) {
-    showPersonalBody(personalOpen);
-    if (!personalOpen) pinInput.focus();
+    showPersonalBody(Boolean(personalPin));
+    if (!personalPin) pinInput.focus();
   }
+}
+
+// 저장에 실패하면(서버 오류 · 비밀번호 변경 등) 화면 목록을 되돌리고 이유를 보여 준다.
+async function savePersonal(next) {
+  const before = personalList;
+  personalList = next;
+  renderPersonal();
+  try {
+    personalList = await personalApi("PUT", next);
+    renderPersonal();
+    setNote("저장했습니다. 어느 기기에서 열어도 같은 목록이 보입니다.");
+  } catch (e) {
+    personalList = before;
+    renderPersonal();
+    if (e.status === 401) lockPersonal();
+    else setNote(e.message, true);
+    return false;
+  }
+  return true;
 }
 
 tabPortal.addEventListener("click", () => showTab("portal"));
@@ -373,22 +388,34 @@ tabPersonal.addEventListener("click", () => showTab("personal"));
 lockForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   lockMsg.textContent = "";
+  const submit = lockForm.querySelector("button");
+  submit.disabled = true;
+  personalPin = pinInput.value;
   try {
-    if (await pinMatches(pinInput.value)) {
-      personalOpen = true;
-      showPersonalBody(true);
-    } else {
-      lockMsg.textContent = "비밀번호가 맞지 않습니다.";
-      pinInput.select();
-    }
+    personalList = await personalApi("GET");
+    // 예전에 이 브라우저에 저장해 둔 목록이 있으면 서버로 한 번 옮긴다.
+    try {
+      const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || "[]");
+      if (Array.isArray(legacy) && legacy.length) {
+        const known = new Set(personalList.map((l) => l.href));
+        const merged = [...personalList, ...legacy.filter((l) => l && l.label && l.href && !known.has(l.href))];
+        personalList = await personalApi("PUT", merged);
+        localStorage.removeItem(LEGACY_KEY);
+      }
+    } catch (e) {}
+    pinInput.value = "";
+    showPersonalBody(true);
   } catch (e) {
-    lockMsg.textContent = "이 환경에서는 잠금을 확인할 수 없습니다. (https 주소로 열어 주세요)";
+    personalPin = "";
+    lockMsg.textContent = e.message;
+    pinInput.select();
+  } finally {
+    submit.disabled = false;
   }
 });
 
 document.querySelector("#lockBtn").addEventListener("click", () => {
-  personalOpen = false;
-  showPersonalBody(false);
+  lockPersonal();
   pinInput.focus();
 });
 
@@ -399,33 +426,34 @@ document.querySelector("#editBtn").addEventListener("click", () => {
   if (editing) document.querySelector("#addLabel").focus();
 });
 
-addForm.addEventListener("submit", (event) => {
+addForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const label = document.querySelector("#addLabel").value.trim();
-  let href = document.querySelector("#addHref").value.trim();
+  const labelInput = document.querySelector("#addLabel");
+  const hrefInput = document.querySelector("#addHref");
+  const label = labelInput.value.trim();
+  let href = hrefInput.value.trim();
   if (!label || !href) return;
   if (!/^https?:\/\//i.test(href)) href = "https://" + href;
   try {
     const url = new URL(href);
-    if (!/^https?:$/.test(url.protocol)) return;
+    if (!/^https?:$/.test(url.protocol)) throw new Error("protocol");
     href = url.href;
   } catch (e) {
-    document.querySelector("#addHref").setCustomValidity("주소 형식이 올바르지 않습니다.");
-    document.querySelector("#addHref").reportValidity();
-    document.querySelector("#addHref").setCustomValidity("");
+    hrefInput.setCustomValidity("주소 형식이 올바르지 않습니다.");
+    hrefInput.reportValidity();
+    hrefInput.setCustomValidity("");
     return;
   }
-  savePersonal([...loadPersonal(), { label, href }]);
-  addForm.reset();
-  renderPersonal();
-  document.querySelector("#addLabel").focus();
+  if (await savePersonal([...personalList, { label, href }])) {
+    addForm.reset();
+    labelInput.focus();
+  }
 });
 
 personalLinks.addEventListener("click", (event) => {
   const btn = event.target.closest(".chip-del");
   if (!btn) return;
-  const list = loadPersonal();
-  list.splice(Number(btn.dataset.index), 1);
-  savePersonal(list);
-  renderPersonal();
+  const next = personalList.slice();
+  next.splice(Number(btn.dataset.index), 1);
+  savePersonal(next);
 });

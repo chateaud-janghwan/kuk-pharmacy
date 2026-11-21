@@ -6,3 +6,8 @@ compatibility_date = "2024-11-01"
 [[kv_namespaces]]
 binding = "HITS"
 id = "93d276a6401d4d51bbfa74dd17c4aa78"
+
+# 개인 탭 바로가기 저장용 KV (비밀번호 확인 후에만 읽고 쓴다)
+[[kv_namespaces]]
+binding = "PERSONAL"
+id = "38c78ec6a1844384b1a34bfc28226a85"

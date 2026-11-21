@@ -606,6 +606,10 @@ main {
   font-weight: 600;
 }
 
+.personal-note.is-error {
+  color: #e5484d;
+}
+
 .personal-empty[hidden],
 .personal-add[hidden],
 .personal[hidden],
