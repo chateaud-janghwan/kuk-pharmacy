@@ -273,7 +273,8 @@ setInterval(updateClock, 15000);
 const PIN_SALT = "03509bfe3b8668ab7266feb07fa73b83";
 const PIN_HASH = "385106126a015e5f255b23627ca9510780feab1b6cbeb9aaab1caa9aa253ccfa";
 const PERSONAL_KEY = "kp_personal_links";
-const UNLOCK_KEY = "kp_personal_open";
+// 열림 상태는 메모리에만 둔다. 새로고침하거나 다시 접속하면 매번 비밀번호를 묻는다.
+let personalOpen = false;
 
 const tabPortal = document.querySelector("#tabPortal");
 const tabPersonal = document.querySelector("#tabPersonal");
@@ -361,12 +362,8 @@ function showTab(name) {
   panelPortal.hidden = personal;
   panelPersonal.hidden = !personal;
   if (personal) {
-    let open = false;
-    try {
-      open = sessionStorage.getItem(UNLOCK_KEY) === "1";
-    } catch (e) {}
-    showPersonalBody(open);
-    if (!open) pinInput.focus();
+    showPersonalBody(personalOpen);
+    if (!personalOpen) pinInput.focus();
   }
 }
 
@@ -378,9 +375,7 @@ lockForm.addEventListener("submit", async (event) => {
   lockMsg.textContent = "";
   try {
     if (await pinMatches(pinInput.value)) {
-      try {
-        sessionStorage.setItem(UNLOCK_KEY, "1");
-      } catch (e) {}
+      personalOpen = true;
       showPersonalBody(true);
     } else {
       lockMsg.textContent = "비밀번호가 맞지 않습니다.";
@@ -392,9 +387,7 @@ lockForm.addEventListener("submit", async (event) => {
 });
 
 document.querySelector("#lockBtn").addEventListener("click", () => {
-  try {
-    sessionStorage.removeItem(UNLOCK_KEY);
-  } catch (e) {}
+  personalOpen = false;
   showPersonalBody(false);
   pinInput.focus();
 });
