@@ -14,7 +14,7 @@ const departments = [
       { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev", repo: "drug-stock-analyzer", updatedAt: "2026-11-28T12:19:06+09:00" },
       { label: "코드날짜계산기", href: "https://pharm-date-calculator.pages.dev", repo: "pharm-date-calculator", updatedAt: "2026-11-28T12:14:52+09:00" },
       { label: "약품리스트편집기", href: "https://drugmap-editor.pages.dev/", repo: "drugmap-editor", updatedAt: "2026-11-28T12:15:07+09:00" },
-      { label: "작업대상퀴즈", href: "https://drugmap-editor.pages.dev/quiz", repo: "drugmap-editor", updatedAt: "2026-11-28T12:33:00+09:00" },
+      { label: "ATC 퀴즈", href: "https://drugmap-editor.pages.dev/quiz", repo: "drugmap-editor", updatedAt: "2026-11-28T12:38:00+09:00" },
       { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/", repo: "chemo-guide", updatedAt: "2026-11-26T19:15:49+09:00" },
       { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
       { label: "재고2관리", href: "https://surplus-drugs.pages.dev", repo: "surplus-drugs", updatedAt: "2026-11-26T13:26:06+09:00" },
