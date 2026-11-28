@@ -1,20 +1,22 @@
-// 건국대학교병원 약제부 업무 포털 — 에디토리얼 미니멀 (원스크린 + 자동 반응형)
+// 건국대학교병원 약제부 업무 포털 — 에디토리얼 미니멀 (원스크린 + 자동 반응형 + 48시간 업데이트 표시)
+const RECENT_WINDOW_MS = 48 * 60 * 60 * 1000;
+
 const departments = [
   {
     title: "병동약국",
     kicker: "Inpatient Pharmacy",
     cols: 2,
     links: [
-      { label: "향정계산기", href: "https://hyangjeong-counter.pages.dev/" },
-      { label: "마약향정폐기량", href: "https://drug-disposal-calculator.hidoi.workers.dev/" },
-      { label: "산제리스트", href: "https://powderlist.pages.dev" },
-      { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/" },
-      { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev" },
-      { label: "코드날짜계산기", href: "https://pharm-date-calculator.pages.dev" },
-      { label: "약품리스트편집기", href: "https://drugmap-editor.pages.dev/" },
-      { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/" },
+      { label: "향정계산기", href: "https://hyangjeong-counter.pages.dev/", repo: "hyangjeong-counter", updatedAt: "2026-09-24T16:16:30+09:00" },
+      { label: "마약향정폐기량", href: "https://drug-disposal-calculator.hidoi.workers.dev/", repo: "drug-disposal-calculator", updatedAt: "2026-09-24T16:16:48+09:00" },
+      { label: "산제리스트", href: "https://powderlist.pages.dev", repo: "powderlist", updatedAt: "2026-11-10T19:04:11+09:00" },
+      { label: "병동월통계", href: "https://reportinp.hidoi.workers.dev/", repo: "report_inp", updatedAt: "2026-09-21T11:44:00+09:00" },
+      { label: "재고분석", href: "https://drug-stock-analyzer.pages.dev", repo: "drug-stock-analyzer", updatedAt: "2026-11-28T12:19:06+09:00" },
+      { label: "코드날짜계산기", href: "https://pharm-date-calculator.pages.dev", repo: "pharm-date-calculator", updatedAt: "2026-11-28T12:14:52+09:00" },
+      { label: "약품리스트편집기", href: "https://drugmap-editor.pages.dev/", repo: "drugmap-editor", updatedAt: "2026-11-28T12:15:07+09:00" },
+      { label: "복약지도문제작", href: "https://chemo-guide.pages.dev/", repo: "chemo-guide", updatedAt: "2026-11-26T19:15:49+09:00" },
       { label: "상비품체커", href: "https://sangbipum-checklist.pages.dev" },
-      { label: "재고2관리", href: "https://surplus-drugs.pages.dev" },
+      { label: "재고2관리", href: "https://surplus-drugs.pages.dev", repo: "surplus-drugs", updatedAt: "2026-11-26T13:26:06+09:00" },
     ],
   },
 ];
@@ -23,9 +25,9 @@ const infoDepartment = {
   title: "약무정보실",
   kicker: "Drug Information",
   links: [
-    { label: "신약변경알림", href: "https://pharmacy-notification.pages.dev/", featured: true },
-    { label: "코드유효성확인", href: "https://drug-code-validator.pages.dev" },
-    { label: "약품코드통계", href: "https://drugcode-stats.pages.dev/" },
+    { label: "신약변경알림", href: "https://pharmacy-notification.pages.dev/", repo: "pharmacy_notification", updatedAt: "2026-11-26T13:34:55+09:00" },
+    { label: "코드유효성확인", href: "https://drug-code-validator.pages.dev", repo: "drug-code-validator", updatedAt: "2026-10-03T13:46:42+09:00" },
+    { label: "약품코드통계", href: "https://drugcode-stats.pages.dev/", repo: "drugcode-stats", updatedAt: "2026-09-24T16:18:23+09:00" },
   ],
 };
 
@@ -33,15 +35,15 @@ const commonDepartment = {
   title: "공통",
   kicker: "Common",
   links: [
-    { label: "통합매뉴얼", href: "https://pharm-hub-75r.pages.dev/", featured: true },
-    { label: "점심메뉴", href: "https://lunch-menu-5ok.pages.dev/" },
+    { label: "통합매뉴얼", href: "https://pharm-hub-75r.pages.dev/", repo: "pharm-hub", updatedAt: "2026-11-28T12:19:23+09:00" },
+    { label: "점심메뉴", href: "https://lunch-menu-5ok.pages.dev/", repo: "lunch-menu", updatedAt: "2026-11-21T11:47:41+09:00" },
   ],
 };
 
 const outpatientDepartment = {
   title: "외래약국",
   kicker: "Outpatient Pharmacy",
-  links: [{ label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/" }],
+  links: [{ label: "대기시간통계", href: "https://outpatient-wait-stats.pages.dev/", repo: "outpatient-wait-time-stats", updatedAt: "2026-09-24T16:18:34+09:00" }],
 };
 
 const allDepartments = [...departments, infoDepartment, commonDepartment, outpatientDepartment];
@@ -80,17 +82,61 @@ function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 }
 
+function isRecentUpdate(iso) {
+  if (!iso) return false;
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return false;
+  const age = Date.now() - t;
+  return age >= 0 && age <= RECENT_WINDOW_MS;
+}
+
 function linksMarkup(links) {
   return links
     .map((link) => {
-      const dot = link.featured ? '<span class="portal-link-dot" aria-hidden="true"></span>' : "";
+      const recent = isRecentUpdate(link.updatedAt);
+      const dot = recent
+        ? '<span class="portal-link-dot" title="최근 48시간 내 업데이트" aria-label="최근 업데이트"></span>'
+        : "";
+      const attrs = [
+        link.repo ? `data-repo="${escapeHtml(link.repo)}"` : "",
+        link.updatedAt ? `data-updated="${escapeHtml(link.updatedAt)}"` : "",
+      ].filter(Boolean).join(" ");
       if (link.disabled) {
         return `<span class="portal-link is-disabled" aria-disabled="true" title="${escapeHtml(link.label)} (현재 사용 중지)"><span class="portal-link-name">${escapeHtml(link.label)}</span></span>`;
       }
-      return `<a class="portal-link" href="${escapeHtml(link.href)}" target="_blank" rel="noopener" title="${escapeHtml(link.label)}"><span class="portal-link-name">${dot}${escapeHtml(link.label)}</span><span class="portal-link-arrow" aria-hidden="true">↗</span></a>`;
+      return `<a class="portal-link" href="${escapeHtml(link.href)}" target="_blank" rel="noopener" title="${escapeHtml(link.label)}" ${attrs}><span class="portal-link-name">${dot}${escapeHtml(link.label)}</span><span class="portal-link-arrow" aria-hidden="true">↗</span></a>`;
     })
     .join("");
 }
+
+// 서버(/api/updates)에서 최신 GitHub 푸시 시각을 받아 48시간 이내 업데이트 파랑점을 실시간 갱신한다.
+(function refreshRecentDots() {
+  fetch("/api/updates")
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      const repos = data && data.repos;
+      if (!repos || typeof repos !== "object") return;
+      document.querySelectorAll("a.portal-link[data-repo]").forEach((el) => {
+        const liveIso = repos[el.dataset.repo];
+        const baseIso = el.dataset.updated || "";
+        const bestTs = Math.max(Date.parse(liveIso) || 0, Date.parse(baseIso) || 0);
+        const recent = bestTs > 0 && Date.now() - bestTs <= RECENT_WINDOW_MS;
+        const nameEl = el.querySelector(".portal-link-name");
+        if (!nameEl) return;
+        let dot = nameEl.querySelector(".portal-link-dot");
+        if (recent && !dot) {
+          dot = document.createElement("span");
+          dot.className = "portal-link-dot";
+          dot.title = "최근 48시간 내 업데이트";
+          dot.setAttribute("aria-label", "최근 업데이트");
+          nameEl.prepend(dot);
+        } else if (!recent && dot) {
+          dot.remove();
+        }
+      });
+    })
+    .catch(() => {});
+})();
 
 function groupMarkup(dept) {
   return `
