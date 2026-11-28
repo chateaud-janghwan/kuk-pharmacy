@@ -105,7 +105,7 @@ function linksMarkup(links) {
       if (link.disabled) {
         return `<span class="portal-link is-disabled" aria-disabled="true" title="${escapeHtml(link.label)} (현재 사용 중지)"><span class="portal-link-name">${escapeHtml(link.label)}</span></span>`;
       }
-      return `<a class="portal-link" href="${escapeHtml(link.href)}" target="_blank" rel="noopener" title="${escapeHtml(link.label)}" ${attrs}><span class="portal-link-name">${dot}${escapeHtml(link.label)}</span><span class="portal-link-arrow" aria-hidden="true">↗</span></a>`;
+      return `<a class="portal-link" href="${escapeHtml(link.href)}" target="_blank" rel="noopener" title="${escapeHtml(link.label)}" ${attrs}><span class="portal-link-name">${escapeHtml(link.label)}${dot}</span><span class="portal-link-arrow" aria-hidden="true">↗</span></a>`;
     })
     .join("");
 }
@@ -130,7 +130,7 @@ function linksMarkup(links) {
           dot.className = "portal-link-dot";
           dot.title = "최근 48시간 내 업데이트";
           dot.setAttribute("aria-label", "최근 업데이트");
-          nameEl.prepend(dot);
+          nameEl.append(dot);
         } else if (!recent && dot) {
           dot.remove();
         }
