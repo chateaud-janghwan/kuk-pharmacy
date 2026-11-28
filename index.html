@@ -2,113 +2,114 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>건국대학교병원 약제부</title>
     <meta name="color-scheme" content="light dark" />
+    <script>
+      try {
+        const s = localStorage.getItem("color-scheme");
+        if (s === "light" || s === "dark") {
+          document.querySelector('meta[name="color-scheme"]').content = s;
+          document.documentElement.dataset.theme = s;
+        }
+      } catch (e) {}
+    </script>
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%233b82f6'/%3E%3Cpath d='M12 7v10M7 12h10' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%233182F6'/%3E%3Cpath d='M12 7v10M7 12h10' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
-    <link rel="stylesheet" href="design-kit/tokens.css" />
-    <link rel="stylesheet" href="design-kit/components.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="kp-topbar" aria-label="상단 메뉴">
-      <a class="brand" href="./index.html" aria-label="건국대학교병원 약제부 홈">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" /></svg>
-        </span>
-        <span>
-          <strong>건국대학교병원</strong>
-          <small>약제부</small>
-        </span>
-      </a>
-      <div class="top-actions">
-        <time class="clock" id="clock" aria-label="현재 시각"></time>
-        <span class="profile-chip" aria-hidden="true">약</span>
-      </div>
-    </header>
-
-    <main>
-      <section class="hero" aria-labelledby="page-title">
-        <div class="hero-main">
-          <p class="kp-eyebrow">Konkuk University Medical Center</p>
-          <h1 id="page-title" class="kp-h1">약제부 업무 포털</h1>
-          <p class="hero-date" id="heroDate"></p>
-          <div class="hero-stats" id="heroStats" aria-hidden="true"></div>
+    <div class="shell">
+      <header class="topbar" aria-label="상단 메뉴">
+        <div class="top-left">
+          <a class="brand" href="./index.html" aria-label="건국대학교병원 약제부 홈">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" /></svg>
+            </span>
+            <span class="brand-text">
+              <strong>건국대학교병원 약제부</strong>
+              <small id="heroDate" class="num"></small>
+            </span>
+          </a>
         </div>
-        <div class="hero-mark" aria-hidden="true">
-          <span class="hero-mark-shape hero-mark-shape--a">
-            <svg viewBox="0 0 24 24"><path d="M10 3v6l-5 8a3 3 0 0 0 2.6 4.5h8.8A3 3 0 0 0 19 17l-5-8V3" /><path d="M8 3h8" /></svg>
-          </span>
-          <span class="hero-mark-shape hero-mark-shape--b">
-            <svg viewBox="0 0 24 24"><path d="M5 11h14" /><path d="M12 4v14" /></svg>
-          </span>
-          <span class="hero-mark-shape hero-mark-shape--c">
-            <svg viewBox="0 0 24 24"><path d="M4 19h16" /><path d="M7 19v-6" /><path d="M12 19V6" /><path d="M17 19v-9" /></svg>
-          </span>
+
+        <div class="top-right">
+          <nav class="tabs" role="tablist" aria-label="화면 선택">
+            <button class="tab is-active" id="tabPortal" role="tab" aria-selected="true" type="button">업무포털</button>
+            <button class="tab" id="tabPersonal" role="tab" aria-selected="false" type="button">개인</button>
+          </nav>
+
+          <label class="search-box" id="searchWrap" aria-label="바로가기 검색">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.8-3.8" />
+            </svg>
+            <input id="portalSearch" type="search" placeholder="검색" autocomplete="off" />
+            <kbd aria-hidden="true">/</kbd>
+          </label>
+
+          <time class="clock num" id="clock" aria-label="현재 시각"></time>
+
+          <button class="theme-btn" id="themeBtn" type="button" aria-label="화면 테마 전환" title="라이트/다크 모드 전환">
+            <svg class="ico-moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+            <svg class="ico-sun" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zm0-5a1 1 0 011 1v2a1 1 0 11-2 0V3a1 1 0 011-1zm0 16a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zm9-7a1 1 0 110 2h-2a1 1 0 110-2h2zM5 11a1 1 0 110 2H3a1 1 0 110-2h2zm13.36-5.36a1 1 0 010 1.41l-1.41 1.41a1 1 0 11-1.41-1.41l1.41-1.41a1 1 0 011.41 0zM7.05 16.95a1 1 0 010 1.41l-1.41 1.41a1 1 0 11-1.41-1.41l1.41-1.41a1 1 0 011.41 0zm11.31 1.41a1 1 0 01-1.41 0l-1.41-1.41a1 1 0 111.41-1.41l1.41 1.41a1 1 0 010 1.41zM7.05 7.05a1 1 0 01-1.41 0L4.22 5.64a1 1 0 011.41-1.41l1.41 1.41a1 1 0 010 1.41z"/></svg>
+          </button>
         </div>
-      </section>
+      </header>
 
-      <div class="tabs" role="tablist" aria-label="화면 선택">
-        <button class="tab is-active" id="tabPortal" role="tab" aria-selected="true" type="button">업무포털</button>
-        <button class="tab" id="tabPersonal" role="tab" aria-selected="false" type="button">개인</button>
-      </div>
+      <main>
+        <div id="panelPortal">
+          <section class="directory" id="departmentGrid" aria-live="polite"></section>
+          <p class="empty-state" id="emptyState" hidden>검색 결과가 없습니다.</p>
+        </div>
 
-      <div id="panelPortal">
-        <label class="search-box kp-input" aria-label="바로가기 검색">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.8-3.8" />
-          </svg>
-          <input id="portalSearch" type="search" placeholder="업무 또는 바로가기 검색" />
-          <kbd aria-hidden="true">/</kbd>
-        </label>
-
-        <section class="department-grid" id="departmentGrid" aria-live="polite"></section>
-        <p class="empty-state" id="emptyState" hidden>검색 결과가 없습니다.</p>
-      </div>
-
-      <section class="personal" id="panelPersonal" hidden aria-label="개인 공간">
-        <form class="lock kp-card" id="lockForm" autocomplete="off">
-          <strong>개인 공간</strong>
-          <p>비밀번호를 입력하세요.</p>
-          <div class="lock-row">
-            <input id="pinInput" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호" />
-            <button class="kp-btn kp-btn--primary" type="submit">열기</button>
-          </div>
-          <p class="lock-msg" id="lockMsg" role="alert"></p>
-        </form>
-
-        <div class="personal-body kp-card" id="personalBody" hidden>
-          <div class="card-top">
-            <div>
-              <p class="card-kicker">Personal</p>
-              <h3>개인 바로가기</h3>
+        <section class="personal" id="panelPersonal" hidden aria-label="개인 공간">
+          <form class="lock" id="lockForm" autocomplete="off">
+            <strong>개인 공간</strong>
+            <p>비밀번호를 입력하세요.</p>
+            <div class="lock-row">
+              <input id="pinInput" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호" aria-label="비밀번호" />
+              <button class="btn btn--primary" type="submit">열기</button>
             </div>
-            <div class="personal-actions">
-              <button class="kp-btn kp-btn--secondary" id="editBtn" type="button">편집</button>
-              <button class="kp-btn kp-btn--secondary" id="lockBtn" type="button">잠그기</button>
-            </div>
-          </div>
-          <div class="link-list personal-links" id="personalLinks"></div>
-          <p class="personal-empty" id="personalEmpty" hidden>아직 바로가기가 없습니다. 편집을 눌러 추가하세요.</p>
-          <form class="personal-add" id="addForm" hidden autocomplete="off">
-            <input id="addLabel" type="text" placeholder="이름" maxlength="20" aria-label="이름" required />
-            <input id="addHref" type="text" inputmode="url" placeholder="주소 (https://…)" aria-label="주소" required />
-            <button class="kp-btn kp-btn--primary" type="submit">추가</button>
+            <p class="lock-msg" id="lockMsg" role="alert"></p>
           </form>
-          <p class="personal-note" id="personalNote"></p>
-        </div>
-      </section>
-    </main>
 
-    <footer class="credit">chateaud.</footer>
+          <div class="personal-body" id="personalBody" hidden>
+            <div class="personal-head">
+              <div>
+                <span class="group-kicker">Personal</span>
+                <h2>개인 바로가기</h2>
+              </div>
+              <div class="personal-actions">
+                <button class="btn btn--ghost" id="editBtn" type="button">편집</button>
+                <button class="btn btn--ghost" id="lockBtn" type="button">잠그기</button>
+              </div>
+            </div>
+
+            <div class="personal-links" id="personalLinks"></div>
+            <p class="personal-empty" id="personalEmpty" hidden>아직 바로가기가 없습니다. 편집을 눌러 추가하세요.</p>
+
+            <form class="personal-add" id="addForm" hidden autocomplete="off">
+              <input id="addLabel" type="text" placeholder="이름" maxlength="20" aria-label="이름" required />
+              <input id="addHref" type="text" inputmode="url" placeholder="주소 (https://…)" aria-label="주소" required />
+              <button class="btn btn--primary" type="submit">추가</button>
+            </form>
+            <p class="personal-note" id="personalNote"></p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <div class="foot-stats num" id="heroStats"></div>
+        <span class="credit">chateaud.</span>
+      </footer>
+    </div>
 
     <script src="script.js"></script>
   </body>
